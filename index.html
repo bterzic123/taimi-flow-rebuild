@@ -1,0 +1,1325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<title>Growth Audit — Taimi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: only light;
+  /* ---- Taimi, extracted from the live iOS screens (dark app) ---- */
+  --tm-bg:#000000; --tm-card:#23262A; --tm-card2:#1B1B1E; --tm-sheet:#23262A; --tm-track:#23262D;
+  --tm-violet:#733AFC; --tm-pink:#E050EB; --tm-mag:#8F3CFF;
+  --tm-ink:#FFFFFF; --tm-txt:#C9CACF; --tm-muted:#A1A1A1; --tm-line:#34373C;
+  --tm-off:#3A3B40; --tm-offtxt:#77787E; --tm-radio:#5E6066;
+  --tm-sec:#62666F; --tm-row:#212121;
+  --tm-gold1:#CF7B01; --tm-gold2:#DC9524; --tm-bronze1:#D76E31; --tm-bronze2:#E58852; --tm-silver1:#7E8094; --tm-silver2:#A4A6B6;
+  --r-ctl:8px; --r-media:18px;
+  /* ---- the report shell, in Taimi's own palette ---- */
+  --bg:#060608; --bg2:#121316; --surf:#15161A;
+  --hair:rgba(255,255,255,.09); --hair2:rgba(255,255,255,.16);
+  --ink:#FFFFFF; --ink2:#BDBEC6; --ink3:#80828C;
+  --accent:#733AFC; --accent-lift:#A884FF;
+  --panel:#FFFFFF; --panel-ink:#15161A; --panel-muted:#62656E; --panel-line:#E9E9EE;
+  --accent-ink:#5B25E0;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{background:var(--bg);color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+@media(max-width:700px){.wrap{padding:0 20px}}
+
+/* ============ top bar ============ */
+.nav{position:sticky;top:0;z-index:70;background:rgba(6,6,8,.86);backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid var(--hair)}
+.nav-in{max-width:1080px;margin:0 auto;padding:0 32px;height:58px;display:flex;align-items:center;gap:18px}
+@media(max-width:700px){.nav-in{padding:0 16px;gap:12px}}
+.nav-brand{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.nav-brand .mk{height:26px;display:block;color:#fff}
+.nav-brand .mk svg{height:26px;width:auto;display:block}
+.nav-brand span{color:var(--ink2);font-weight:500}
+.nav-brand b{color:var(--ink);font-weight:600;padding-left:10px;border-left:1px solid var(--hair2);white-space:nowrap}
+.nav-links{margin-left:auto;display:flex;gap:2px;align-items:center}
+.nav-links button{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ink3);transition:.16s}
+.nav-links button:hover{color:var(--ink)}
+.nav-links button.on{color:var(--ink);background:#1D1E23;box-shadow:0 0 0 1px var(--hair)}
+@media(max-width:640px){.nav-brand span{display:none}}
+
+.view{display:none}
+.view.on{display:block}
+
+/* ============ hero ============ */
+.hero{padding:104px 0 0;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-340px;left:50%;transform:translateX(-50%);
+  width:1100px;height:640px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(115,58,252,.34),transparent 72%)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(40% 50% at 8% 22%,rgba(224,80,235,.16),transparent 70%),
+   radial-gradient(38% 45% at 92% 18%,rgba(248,60,59,.13),transparent 70%)}
+.hero>*{position:relative;z-index:1}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-lift);margin-bottom:26px}
+.hero h1{font-size:76px;line-height:.98;font-weight:700;letter-spacing:-.045em;margin:0 0 24px}
+@media(max-width:820px){.hero h1{font-size:50px}.hero{padding-top:70px}}
+.hero .lede{font-size:20px;line-height:1.5;font-weight:400;color:var(--ink2);max-width:600px;margin:0 auto;letter-spacing:-.012em}
+@media(max-width:820px){.hero .lede{font-size:17px}}
+.hero .meta{margin-top:30px;font-size:12.5px;color:var(--ink3);letter-spacing:.02em}
+.hero .meta b{color:var(--ink2);font-weight:600}
+
+.stats{display:flex;justify-content:center;gap:0;margin:70px auto 0;max-width:760px;
+  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.stat{flex:1;padding:26px 14px;text-align:center;border-left:1px solid var(--hair)}
+.stat:first-child{border-left:none}
+.stat b{display:block;font-size:26px;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+.stat span{display:block;font-size:11.5px;color:var(--ink3);margin-top:5px;line-height:1.35}
+@media(max-width:700px){.stat b{font-size:19px}.stat{padding:18px 8px}}
+
+.fb{max-width:760px;margin:0 auto;padding:30px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:26px;text-align:left}
+@media(max-width:700px){.fb{grid-template-columns:1fr;gap:20px;padding-top:24px}}
+.fb-k{grid-column:1/-1;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink3);text-align:center;margin-bottom:-6px}
+.fb-i{display:flex;gap:12px;align-items:flex-start}
+.fb-i .tick{width:18px;height:18px;flex:none;margin-top:3px;border-radius:50%;background:rgba(115,58,252,.26);
+  display:grid;place-items:center}
+.fb-i .tick svg{width:10px;height:10px;stroke:var(--accent-lift);stroke-width:3;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.fb-i p{font-size:14px;line-height:1.55;color:var(--ink2);margin:0}
+.fb-i p b{color:var(--ink);font-weight:700}
+
+.sec{padding:96px 0}
+.sec-k{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:18px}
+.sec h2{font-size:38px;line-height:1.14;font-weight:700;letter-spacing:-.035em;margin:0 0 20px;max-width:680px}
+@media(max-width:820px){.sec h2{font-size:29px}.sec{padding:64px 0}}
+.sec p.body{font-size:17px;line-height:1.66;color:var(--ink2);max-width:640px;margin:0 0 18px;letter-spacing:-.008em}
+.sec p.body b{color:var(--ink);font-weight:600}
+.rule{height:1px;background:var(--hair);margin:0}
+
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px;max-width:820px}
+@media(max-width:760px){.notes{grid-template-columns:1fr}}
+.note{background:var(--surf);border:1px solid var(--hair);border-radius:16px;padding:24px 26px}
+.note h4{font-size:15px;font-weight:700;letter-spacing:-.015em;margin:0 0 8px}
+.note p{font-size:14px;line-height:1.6;color:var(--ink2);margin:0}
+
+.ideas{display:flex;flex-direction:column;gap:0;margin-top:14px;border-top:1px solid var(--hair)}
+.idea{display:grid;grid-template-columns:52px 1fr 180px;gap:26px;align-items:start;
+  padding:30px 4px;border-bottom:1px solid var(--hair);text-align:left;width:100%;transition:.18s}
+.idea:hover{background:rgba(255,255,255,.035)}
+@media(max-width:780px){.idea{grid-template-columns:38px 1fr;gap:16px}}
+.idea .no{font-size:13px;font-weight:700;color:var(--ink3);padding-top:4px;letter-spacing:.02em}
+.idea h3{font-size:21px;line-height:1.25;font-weight:700;letter-spacing:-.024em;margin:0 0 7px}
+@media(max-width:820px){.idea h3{font-size:18px}}
+.idea p{font-size:14.5px;line-height:1.6;color:var(--ink2);margin:0;max-width:540px}
+.idea .out{text-align:right;padding-top:3px}
+@media(max-width:780px){.idea .out{grid-column:2;text-align:left;padding-top:12px}}
+.idea .out b{display:block;font-size:19px;font-weight:700;letter-spacing:-.025em;color:var(--accent-lift);white-space:nowrap}
+.idea .out span{display:block;font-size:10.5px;color:var(--ink3);margin-top:3px;letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.idea .seeit{display:inline-flex;align-items:center;gap:5px;margin-top:11px;font-size:12.5px;
+  font-weight:600;color:var(--accent-lift)}
+.idea .seeit svg{width:12px;height:12px}
+
+.band{background:var(--surf);border:1px solid var(--hair);border-radius:28px;padding:40px 44px;margin-top:44px;
+  display:flex;align-items:center;gap:36px;flex-wrap:wrap;position:relative;overflow:hidden}
+.band::before{content:'';position:absolute;right:-120px;top:-160px;width:420px;height:420px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(224,80,235,.16),transparent 72%);pointer-events:none}
+@media(max-width:700px){.band{padding:28px 24px;gap:22px}}
+.band .lab{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.band .txt{flex:1;min-width:240px;position:relative}
+.band .txt p{font-size:15.5px;line-height:1.6;color:var(--ink2);margin:0}
+.band .txt p b{color:var(--ink)}
+.band .nums{display:flex;gap:34px;position:relative}
+.band .nums div b{display:block;font-size:30px;font-weight:700;letter-spacing:-.035em;color:var(--accent-lift)}
+.band .nums div span{display:block;font-size:11px;color:var(--ink3);margin-top:2px;letter-spacing:.04em;
+  text-transform:uppercase;font-weight:600}
+
+.cta-row{display:flex;justify-content:center;align-items:center;gap:22px;flex-wrap:wrap;margin-top:52px}
+.bigbtn{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;
+  font-size:15px;font-weight:700;letter-spacing:-.01em;padding:15px 26px;border-radius:30px;transition:.16s}
+.bigbtn:hover{filter:brightness(1.12)}
+.bigbtn svg{width:15px;height:15px}
+
+.foot{border-top:1px solid var(--hair);padding:36px 0 70px;font-size:12.5px;line-height:1.6;color:var(--ink3)}
+
+/* ============ prototype stage ============ */
+.stage{display:grid;grid-template-columns:minmax(440px,1fr) minmax(400px,470px);gap:0;
+  align-items:start;min-height:calc(100vh - 58px)}
+@media(max-width:1080px){.stage{grid-template-columns:1fr}}
+.phonecol{padding:34px 24px 46px;display:flex;flex-direction:column;align-items:center;gap:18px;position:relative}
+.phonecol::before{content:'';position:absolute;left:50%;top:120px;transform:translateX(-50%);width:640px;height:640px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(115,58,252,.22),transparent 72%);pointer-events:none}
+.phonecol>*{position:relative}
+.panelcol{border-left:1px solid var(--hair);background:var(--panel);color:var(--panel-ink);
+  min-height:calc(100vh - 58px);position:sticky;top:58px;max-height:calc(100vh - 58px);overflow-y:auto}
+@media(max-width:1080px){.panelcol{position:static;max-height:none;border-left:none;border-top:1px solid var(--hair)}}
+
+.phone{position:relative;width:390px;height:844px;flex:none;background:#000;border:11px solid #000;
+  border-radius:46px;box-shadow:0 0 0 1.5px #34363D,0 34px 80px -22px rgba(115,58,252,.35)}
+
+.phone-in{position:absolute;inset:0;border-radius:36px;overflow:hidden;background:var(--tm-bg);color-scheme:only light}
+.island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:104px;height:30px;background:#000;
+  border-radius:16px;z-index:60;pointer-events:none}
+.sbar{position:absolute;top:0;left:0;right:0;height:50px;z-index:55;pointer-events:none;display:flex;
+  align-items:center;justify-content:space-between;padding:14px 28px 0 34px;font:600 15px/1 -apple-system,'Inter',sans-serif;color:#fff;transition:color .3s}
+.sbar.ink{color:#111}
+.sbar .glyphs{display:flex;gap:5px;align-items:center}
+.homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:134px;height:5px;
+  border-radius:3px;background:rgba(255,255,255,.9);z-index:56;pointer-events:none;transition:background .3s}
+.homebar.ink{background:#111}
+.screenwrap{position:absolute;inset:0;overflow:hidden;background:var(--tm-bg)}
+
+/* ============ phone screens — Taimi's system, all prefixed scr-/tm- ============ */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--tm-bg);color:var(--tm-ink);
+  font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;
+  transform:translateX(100%);transition:transform .36s cubic-bezier(.32,.72,0,1);z-index:10;will-change:transform}
+.scr.is-active{transform:translateX(0);z-index:20}
+.scr.is-past{transform:translateX(-24%)}
+.scr.sheet{transform:translateY(100%)}
+.scr.sheet.is-active{transform:translateY(0);z-index:30}
+.scr.nofx{transition:none}
+.scr-top{flex:none;padding:62px 16px 0;position:relative;z-index:2}
+.scr-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 16px;scrollbar-width:none;position:relative;z-index:2}
+.scr-body::-webkit-scrollbar{display:none}
+.scr-body.dock{display:flex;flex-direction:column}
+.scr-foot{flex:none;padding:12px 16px 34px;position:relative;z-index:2}
+
+.tm-prog{width:160px;height:4px;border-radius:2px;background:var(--tm-track);margin:0 auto;overflow:hidden}
+.tm-prog i{display:block;height:100%;border-radius:2px;background:linear-gradient(90deg,#793BFC,#E050EB);transition:width .4s}
+.tm-h{font:700 29px/1.13 'Roboto Condensed','Arial Narrow',sans-serif;letter-spacing:-.005em;text-align:center;margin:30px 8px 0;color:var(--tm-ink);text-wrap:balance}
+.tm-sub{font-size:13.5px;line-height:1.4;color:var(--tm-muted);text-align:center;margin:10px 10px 0}
+
+.tm-btn{display:block;width:100%;height:50px;border-radius:var(--r-ctl);background:var(--tm-violet);color:#fff;
+  font:600 16px/1 -apple-system,'Inter',sans-serif;letter-spacing:-.005em;transition:filter .15s}
+.tm-btn:hover{filter:brightness(1.08)}
+.tm-btn[disabled]{background:var(--tm-off);color:var(--tm-offtxt);cursor:default;filter:none}
+.tm-ghost{display:block;width:100%;height:40px;margin-top:6px;font:500 15px/1 -apple-system,'Inter',sans-serif;color:var(--tm-muted)}
+.tm-helper{font-size:12.5px;line-height:1.4;color:var(--tm-muted);text-align:center;margin:0 0 10px}
+
+/* welcome — their splash illustration */
+.scr--welcome{background:linear-gradient(180deg,#6A2FE0 0%,#7637F0 62%,#F2443F 100%)}
+.tm-splash{position:absolute;left:0;right:0;top:0;height:595px;z-index:1;
+  -webkit-mask-image:linear-gradient(180deg,#000 86%,transparent);mask-image:linear-gradient(180deg,#000 86%,transparent)}
+.tm-splash img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.scr--welcome .scr-body{z-index:2}
+.scr--welcome .scr-foot{padding:0 18px 30px}
+.tm-wbtn{display:flex;align-items:center;gap:12px;width:100%;height:46px;border-radius:var(--r-ctl);padding:0 14px;
+  font:500 15px/1 -apple-system,'Inter',sans-serif;justify-content:center;position:relative}
+.tm-wbtn svg{position:absolute;left:14px;width:18px;height:18px}
+.tm-wbtn.w{background:#fff;color:#111}
+.tm-wbtn.d{background:rgba(48,22,90,.78);color:#fff;margin-top:10px}
+.tm-legal{font-size:10.5px;line-height:1.35;color:rgba(255,255,255,.72);text-align:center;margin-top:14px}
+.tm-legal b{color:#fff;font-weight:600}
+
+/* birthday wheels */
+.tm-age{font-size:17px;font-weight:700;text-align:center;margin-top:150px;color:var(--tm-ink)}
+.tm-wheels{position:relative;display:flex;gap:4px;width:300px;margin:12px auto 0;height:180px}
+.tm-wbar{position:absolute;left:0;right:0;top:72px;height:36px;border-radius:10px;background:var(--tm-card2);pointer-events:none}
+.tm-wheel{position:relative;height:180px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 32%,#000 68%,transparent);mask-image:linear-gradient(180deg,transparent,#000 32%,#000 68%,transparent)}
+.tm-wheel::-webkit-scrollbar{display:none}
+.tm-wheel.d{width:56px}.tm-wheel.m{flex:1}.tm-wheel.y{width:84px}
+.tm-wheel .sp{height:72px}
+.tm-wheel .it{height:36px;scroll-snap-align:center;display:flex;align-items:center;justify-content:center;
+  font-size:21px;color:var(--tm-ink);transition:opacity .12s}
+.tm-wheel.m .it{justify-content:flex-start;padding-left:8px}
+
+/* option rows — radio + checkbox */
+.tm-rows{display:flex;flex-direction:column;gap:12px;margin-top:28px}
+.tm-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:52px;text-align:left;
+  background:var(--tm-card);border-radius:var(--r-ctl);padding:10px 14px;font-size:15.5px;color:var(--tm-ink);transition:background .15s}
+.tm-row small{display:block;font-size:11.5px;color:var(--tm-muted);margin-top:3px}
+.tm-rad{width:20px;height:20px;flex:none;border-radius:50%;border:1.5px solid var(--tm-radio);display:grid;place-items:center;transition:.15s}
+.tm-rad i{width:8px;height:8px;border-radius:50%;background:#fff;opacity:0}
+.tm-row.on .tm-rad{background:var(--tm-violet);border-color:var(--tm-violet)}
+.tm-row.on .tm-rad i{opacity:1}
+.tm-chk{width:19px;height:19px;flex:none;border-radius:4px;border:1.5px solid var(--tm-radio);display:grid;place-items:center;transition:.15s}
+.tm-chk svg{width:12px;height:12px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.tm-row.on .tm-chk{background:var(--tm-violet);border-color:var(--tm-violet)}
+.tm-row.on .tm-chk svg{opacity:1}
+.tm-openrow{display:flex;align-items:center;justify-content:space-between;margin-top:22px;font-size:13.5px;color:var(--tm-ink)}
+
+/* their toggle */
+.tm-tg{width:51px;height:31px;border-radius:16px;background:#88879B;position:relative;flex:none;transition:.2s}
+.tm-tg i{position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 2px 4px rgba(0,0,0,.25)}
+.tm-tg.on{background:var(--tm-violet)}
+.tm-tg.on i{left:22px}
+
+/* age range */
+.tm-collage{display:block;width:280px;height:auto;margin:22px auto 0}
+.tm-rangehd{display:flex;justify-content:space-between;font-size:15px;color:var(--tm-ink);margin:22px 4px 0}
+.tm-range{position:relative;height:40px;margin:6px 10px 0;touch-action:none}
+.tm-range .tr{position:absolute;left:0;right:0;top:18px;height:4px;border-radius:2px;background:#3A3B40}
+.tm-range .fill{position:absolute;top:18px;height:4px;border-radius:2px;background:var(--tm-violet)}
+.tm-range .th{position:absolute;top:6px;width:28px;height:28px;margin-left:-14px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.35);cursor:grab}
+
+/* loader */
+.scr--load{background:radial-gradient(70% 45% at 50% 30%,rgba(115,58,252,.42),transparent 70%),#000}
+.tm-loadwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding-bottom:10px}
+.tm-ringload{position:relative;width:132px;height:132px;margin-bottom:22px}
+.tm-ringload svg.r{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.tm-ringload .lg{position:absolute;inset:0;display:grid;place-items:center;color:#fff}
+.tm-ringload .lg svg{width:70px;height:auto}
+.tm-load-h{font:700 25px/1.15 'Roboto Condensed',sans-serif;color:#fff;text-align:center;margin:0 0 18px}
+.tm-lsteps{width:100%;max-width:300px;display:flex;flex-direction:column;gap:11px;margin-bottom:24px}
+.tm-ls{display:flex;align-items:center;gap:11px;font-size:14.5px;font-weight:500;color:rgba(255,255,255,.4);transition:.35s}
+.tm-ls.on{color:#fff}
+.tm-ls .d{width:22px;height:22px;flex:none;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);display:grid;place-items:center;transition:.35s}
+.tm-ls.on .d{background:var(--tm-violet);border-color:var(--tm-violet)}
+.tm-ls .d svg{width:12px;height:12px;stroke:#fff;stroke-width:3.2;fill:none;opacity:0;stroke-linecap:round;stroke-linejoin:round}
+.tm-ls.on .d svg{opacity:1}
+.tm-review{width:100%;max-width:310px;background:#1C1D21;border:1.5px solid rgba(143,60,255,.75);border-radius:16px;padding:14px 16px;
+  box-shadow:0 0 22px rgba(115,58,252,.45)}
+.tm-review h5{font-size:14.5px;font-weight:700;color:#fff}
+.tm-review .st{font-size:12px;color:#fff;margin-top:4px;letter-spacing:.06em}
+.tm-review .st span{color:#9A9BA2;letter-spacing:0;margin-left:6px}
+.tm-review p{font-size:12.5px;line-height:1.45;color:#B4B5BB;margin-top:6px}
+
+/* payoff — in place of the empty People tab */
+.tm-avs{display:flex;justify-content:center;align-items:center;margin-top:20px}
+.tm-avs img{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--tm-bg);margin-left:-10px;display:block}
+.tm-avs img:first-child{margin-left:0}
+.tm-avs .me{width:76px;height:76px;border-radius:50%;padding:3px;background:conic-gradient(#793BFC,#E050EB,#793BFC);margin:0 -4px;position:relative;z-index:2}
+.tm-avs .me img{width:100%;height:100%;border:3px solid var(--tm-bg);margin:0}
+.tm-kick{font-size:12.5px;color:var(--tm-muted);text-align:center;margin-top:12px}
+.tm-pcard{background:var(--tm-card);border-radius:12px;padding:14px 14px 12px;margin-top:16px}
+.tm-pcard + .tm-pcard{margin-top:10px}
+.tm-plab{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--tm-muted)}
+.tm-pval{font-size:15.5px;font-weight:600;color:var(--tm-ink);margin-top:5px}
+.tm-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.tm-chip{height:32px;padding:0 12px;border-radius:16px;background:#2E3136;border:1.5px solid transparent;font-size:13px;font-weight:500;color:var(--tm-txt);display:flex;align-items:center;gap:6px}
+.tm-chip.on{background:rgba(115,58,252,.22);border-color:var(--tm-violet);color:#fff}
+.tm-agerow{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.tm-agerow b{font-size:17px;font-weight:700}
+.tm-pm{display:flex;gap:6px}
+.tm-pm button{width:32px;height:32px;border-radius:50%;background:#2E3136;color:#fff;font-size:18px;line-height:1}
+.tm-scale{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13px;color:var(--tm-txt);line-height:1.4}
+.tm-scale b{color:#fff}
+.tm-scale svg{width:20px;height:20px;flex:none}
+.tm-lock{display:flex;align-items:center;gap:12px;margin-top:10px;background:var(--tm-row);border:1.5px dashed #3E4148;border-radius:12px;padding:10px 12px}
+.tm-lock .ph{display:flex;flex:none}
+.tm-lock .ph img{width:34px;height:44px;border-radius:7px;object-fit:cover;filter:blur(3.5px);margin-left:-8px;border:2px solid var(--tm-row)}
+.tm-lock .ph img:first-child{margin-left:0}
+.tm-lock div{font-size:12.5px;line-height:1.35;color:var(--tm-muted)}
+.tm-lock div b{display:block;color:var(--tm-ink);font-size:14px;font-weight:600}
+
+/* paywall — their Plans screen */
+.scr--pay .scr-top{padding:56px 16px 0}
+.tm-paybar{display:flex;align-items:center;justify-content:center;height:36px;position:relative;font-size:17px;font-weight:600}
+.tm-x{position:absolute;right:0;top:0;width:36px;height:36px;display:grid;place-items:center;color:var(--tm-ink)}
+.tm-x svg{width:22px;height:22px}
+.tm-payh{font:700 23px/1.12 'Roboto Condensed',sans-serif;text-align:center;margin:8px 6px 0;color:var(--tm-ink);text-wrap:balance}
+.tm-paysub{font-size:13px;line-height:1.35;color:var(--tm-muted);text-align:center;margin:5px 14px 0}
+.tm-tiers{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:12px -16px 0;padding:0 56px}
+.tm-tiers::-webkit-scrollbar{display:none}
+.tm-tier{flex:none;width:246px;height:62px;border-radius:7px;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:1.5px solid;transition:opacity .2s}
+.tm-tier .nm{display:flex;align-items:center;gap:6px;font:800 17px/1 -apple-system,'Inter',sans-serif;color:#fff;letter-spacing:-.01em}
+.tm-tier .nm svg{height:17px;width:auto}
+.tm-tier .pill{font:800 10.5px/1 -apple-system,'Inter',sans-serif;padding:3px 5px;border-radius:3px;letter-spacing:.04em}
+.tm-tier .tag{font:700 10px/1 -apple-system,'Inter',sans-serif;letter-spacing:.06em;color:#fff;margin-top:7px}
+.tm-tier.gold{background:linear-gradient(90deg,#3A2E22,#2F2822 50%,#3A2E22);border-color:#C98A2B}
+.tm-tier.gold .pill{background:#E3A11F;color:#2A1A00}
+.tm-tier.silver{background:linear-gradient(90deg,#33363E,#2A2C33 50%,#33363E);border-color:#6C7080}
+.tm-tier.silver .pill{background:#A2A5B2;color:#1C1D22}
+.tm-tier.bronze{background:linear-gradient(90deg,#3B2C25,#30261F 50%,#3B2C25);border-color:#C9693A}
+.tm-tier.bronze .pill{background:#D9733A;color:#2A1206}
+.tm-tier:not(.cur){opacity:.55}
+.tm-dots{display:flex;gap:6px;justify-content:center;margin-top:9px}
+.tm-dots i{width:6px;height:6px;border-radius:50%;background:#55575E}
+.tm-dots i.on{background:#fff}
+.tm-proof{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin-top:12px;background:var(--tm-row);border-radius:10px;padding:9px 4px}
+.tm-proof div{text-align:center;border-left:1px solid #34373C;padding:0 4px}
+.tm-proof div:first-child{border-left:none}
+.tm-proof b{display:block;font-size:15px;font-weight:700;color:var(--tm-ink);white-space:nowrap}
+.tm-proof span{display:block;font-size:10.5px;line-height:1.25;color:var(--tm-muted);margin-top:2px}
+.tm-quote{margin-top:8px;background:var(--tm-row);border-radius:10px;padding:9px 12px;font-size:12px;line-height:1.4;color:var(--tm-txt)}
+.tm-quote b{color:var(--tm-ink);font-weight:600}
+.tm-sec{margin-top:12px;border-radius:9px;overflow:hidden;background:var(--tm-row)}
+.tm-sec h6{background:var(--tm-sec);font-size:14.5px;font-weight:600;color:#fff;padding:9px 14px}
+.tm-f{display:flex;gap:12px;padding:9px 14px;border-top:1px solid #2C2C2C}
+.tm-f:first-of-type{border-top:none}
+.tm-f svg{width:16px;height:16px;flex:none;margin-top:2px}
+.tm-f b{display:block;font-size:14px;font-weight:600;color:var(--tm-ink)}
+.tm-f span{display:block;font-size:11.5px;color:var(--tm-muted);margin-top:1px}
+.tm-f.lock b,.tm-f.lock span{color:#86878D}
+.scr--pay .scr-foot{padding:10px 16px 30px;background:var(--tm-bg)}
+.tm-paybtn{display:block;width:100%;height:50px;border-radius:var(--r-ctl);font:600 16px/1 -apple-system,'Inter',sans-serif;color:#1A1206;transition:background .25s}
+.tm-paybtn.gold{background:linear-gradient(90deg,var(--tm-gold1),var(--tm-gold2))}
+.tm-paybtn.silver{background:linear-gradient(90deg,var(--tm-silver1),var(--tm-silver2));color:#17181C}
+.tm-paybtn.bronze{background:linear-gradient(90deg,var(--tm-bronze1),var(--tm-bronze2));color:#22100A}
+.tm-terms{display:block;text-align:center;font-size:11px;color:#6E7076;margin-top:9px}
+
+/* offer — their gift sheet, on Bronze */
+.scr--offer{background:transparent}
+.tm-dim{position:absolute;inset:0;background:rgba(0,0,0,.6)}
+.tm-osheet{position:absolute;left:0;right:0;bottom:0;top:58px;background:var(--tm-sheet);border-radius:16px 16px 0 0;display:flex;flex-direction:column}
+.tm-osheet .scr-top{padding:8px 16px 0}
+.tm-handle{width:38px;height:5px;border-radius:3px;background:#55575E;margin:0 auto}
+.tm-osheet .tm-x{top:6px;right:12px}
+.tm-gift{display:block;width:84px;height:84px;margin:10px auto 0}
+.tm-oh{font:700 25px/1.14 'Roboto Condensed',sans-serif;text-align:center;margin:12px 8px 0;color:var(--tm-ink)}
+.tm-os{font-size:13.5px;line-height:1.4;color:var(--tm-muted);text-align:center;margin:8px 10px 0}
+.tm-oprice{display:flex;align-items:center;justify-content:space-between;margin-top:14px;border:1.5px solid #C9693A;border-radius:10px;padding:12px 14px;
+  background:linear-gradient(90deg,#3B2C25,#30261F 50%,#3B2C25)}
+.tm-oprice .nm{display:flex;align-items:center;gap:6px;font:800 16px/1 -apple-system,'Inter',sans-serif;color:#fff}
+.tm-oprice .nm svg{height:16px;width:auto}
+.tm-oprice .pill{font:800 10px/1 -apple-system,'Inter',sans-serif;padding:3px 5px;border-radius:3px;background:#D9733A;color:#2A1206}
+.tm-oprice b{font-size:22px;font-weight:800;color:#fff}
+.tm-ofine{font-size:11px;color:var(--tm-muted);text-align:center;margin-top:7px}
+.tm-osheet .tm-sec{margin-top:10px}
+.tm-osheet .tm-f{padding:8px 14px}
+.tm-osheet .scr-foot{padding-bottom:26px}
+
+/* notifications — their screen, after the plans */
+.tm-ncards{position:relative;height:150px;margin-top:20px}
+.tm-nc{position:absolute;left:8px;right:8px;display:flex;align-items:center;gap:10px;border-radius:16px;padding:10px 12px;color:#111}
+.tm-nc.a{top:0;background:#C9C9CE;transform:rotate(-2deg)}
+.tm-nc.b{top:62px;background:#fff;transform:rotate(-1.5deg);box-shadow:0 8px 20px rgba(0,0,0,.4)}
+.tm-nc .ic{width:38px;height:38px;border-radius:9px;background:#000;display:grid;place-items:center;flex:none}
+.tm-nc .ic svg{width:30px;height:auto;color:#fff}
+.tm-nc div{flex:1;font-size:13.5px;line-height:1.3}
+.tm-nc div b{display:block;font-weight:600}
+.tm-nc small{font-size:11px;color:#6B6C72;align-self:flex-start}
+.tm-ngrp{font-size:12.5px;color:var(--tm-muted);margin:16px 0 4px}
+.tm-nrow{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--tm-line)}
+.tm-nrow .ic{width:36px;height:36px;border-radius:50%;background:#2B2D31;display:grid;place-items:center;flex:none}
+.tm-nrow .ic svg{width:19px;height:19px;stroke:#D5D6DA;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tm-nrow div{flex:1;font-size:15px;line-height:1.25;color:var(--tm-ink)}
+.tm-nrow div span{display:block;font-size:12.5px;color:var(--tm-muted);margin-top:2px}
+
+/* light mode — an approximation: Taimi ships dark, no light frames exist */
+.phone-in.light{--tm-bg:#F4F4F7;--tm-card:#FFFFFF;--tm-card2:#E6E6EC;--tm-sheet:#FFFFFF;--tm-track:#DCDCE3;--tm-ink:#111114;--tm-txt:#3A3B42;
+  --tm-muted:#6C6E76;--tm-line:#E3E3E8;--tm-off:#DADAE0;--tm-offtxt:#8E9097;--tm-radio:#B9BBC2;--tm-sec:#D9DAE0;--tm-row:#FFFFFF;background:var(--tm-bg)}
+.phone-in.light .screenwrap{background:var(--tm-bg)}
+.phone-in.light .tm-sec h6{color:#1C1D22}
+.phone-in.light .tm-f{border-top-color:#EDEDF1}
+.phone-in.light .tm-f.lock b,.phone-in.light .tm-f.lock span{color:#9A9CA3}
+.phone-in.light .tm-chip{background:#ECECF1;color:#3A3B42}
+.phone-in.light .tm-chip.on{background:rgba(115,58,252,.12);color:#3A1C9C}
+.phone-in.light .tm-pm button,.phone-in.light .tm-nrow .ic{background:#ECECF1;color:#111}
+.phone-in.light .tm-nrow .ic svg{stroke:#3A3B42}
+.phone-in.light .tm-scale b{color:#111}
+.phone-in.light .tm-lock{border-color:#D3D4DA}
+.phone-in.light .tm-lock .ph img{border-color:#fff}
+.phone-in.light .tm-proof div{border-left-color:#E3E3E8}
+.phone-in.light .tm-range .tr{background:#D6D6DD}
+.phone-in.light .tm-range .th{box-shadow:0 1px 6px rgba(0,0,0,.25);border:1px solid #E1E1E6}
+.phone-in.light .tm-avs img,.phone-in.light .tm-avs .me img{border-color:var(--tm-bg)}
+.phone-in.light .tm-dots i{background:#C6C7CE}.phone-in.light .tm-dots i.on{background:#111}
+.phone-in.light .tm-handle{background:#C6C7CE}
+.phone-in.light .tm-tier .nm,.phone-in.light .tm-tier .tag,.phone-in.light .tm-oprice .nm,.phone-in.light .tm-oprice b{color:#1C1D22}
+.phone-in.light .tm-tier.gold,.phone-in.light .tm-oprice.gold{background:linear-gradient(90deg,#FFF1DA,#FFF7EA 50%,#FFF1DA)}
+.phone-in.light .tm-tier.silver{background:linear-gradient(90deg,#ECEDF2,#F6F6F9 50%,#ECEDF2)}
+.phone-in.light .tm-tier.bronze,.phone-in.light .tm-oprice{background:linear-gradient(90deg,#FFE9DD,#FFF3EC 50%,#FFE9DD)}
+.phone-in.light .tm-dim{background:rgba(20,20,26,.45)}
+.phone-in.light .tm-x{color:#111}
+.phone-in.light .tm-tg:not(.on){background:#D3D3DA}
+.phone-in.light .tm-nc.a{background:#E2E2E7}
+.phone-in.light .tm-collage.dk{display:none}
+.tm-collage.lt{display:none}
+.phone-in.light .tm-collage.lt{display:block}
+
+/* prototype toolbar, walkthrough, QR */
+.tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
+.seg{display:inline-flex;align-items:center;background:#15161A;border:1px solid #2A2C32;border-radius:20px;padding:3px;gap:2px}
+.seg button{padding:6px 11px;border-radius:16px;font:600 12px/1 'Inter',sans-serif;color:var(--ink2);transition:.14s}
+.seg button.on{background:#fff;color:#111}
+.demo-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:20px;background:var(--accent);color:#fff;
+  font:700 12px/1 'Inter',sans-serif}
+.demo-cap{width:390px;max-width:calc(100vw - 24px);background:#15161A;border:1px solid #2A2C32;border-radius:16px;padding:14px 14px 12px;
+  display:flex;align-items:center;gap:12px;position:relative;overflow:hidden}
+.demo-cap .bar{position:absolute;left:0;top:0;right:0;height:3px;background:#24262B}
+.demo-cap .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#793BFC,#E050EB);transition:width .25s linear}
+.demo-cap p{flex:1;font-size:13.5px;line-height:1.45;color:var(--ink);margin:0;font-weight:500}
+.demo-cap button{font:700 12px/1 'Inter',sans-serif;color:var(--ink2);padding:7px 10px;border-radius:12px;border:1px solid #2F3137;flex:none}
+.finger{position:absolute;z-index:90;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(255,255,255,.28);
+  border:2px solid rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(0,0,0,.4);pointer-events:none;opacity:0;left:50%;top:60%;
+  transition:left .32s cubic-bezier(.4,0,.2,1),top .32s cubic-bezier(.4,0,.2,1),opacity .2s,transform .15s}
+.finger.show{opacity:1}
+.finger.press{transform:scale(.78);background:rgba(115,58,252,.5)}
+.qr{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:10px 16px 10px 10px;text-align:left;color:#15161A}
+.qr img{width:123px;height:123px;display:block;image-rendering:pixelated;border-radius:6px}
+.qr span{font-size:12.5px;line-height:1.45;color:#4A4C55}
+.qr b{display:block;color:#15161A;font-size:13.5px}
+@media(max-width:1080px){.qr{display:none}}
+
+#view-proto .tools{order:0} #view-proto .demo-cap{order:1} #view-proto .phone{order:2} #view-proto .chips{order:3}
+#view-proto .chiphint{order:4} #view-proto .qr{order:5}
+/* on a phone: the prototype is the screen */
+@media(max-width:500px){
+  #view-proto .phonecol{padding:0 0 28px;gap:14px}
+  #view-proto .phonecol::before{display:none}
+  #view-proto .phone{width:100vw;height:calc(100svh - 58px);min-height:640px;border:0;border-radius:0;box-shadow:none;order:1}
+  #view-proto .phone-in{border-radius:0}
+  #view-proto .island,#view-proto .sbar,#view-proto .homebar{display:none}
+  #view-proto .scr-top{padding-top:18px}
+  #view-proto .scr-foot{padding-bottom:18px}
+  #view-proto .scr--pay .scr-top{padding-top:12px}
+  #view-proto .scr--pay .scr-foot{padding-bottom:16px}
+  #view-proto .tm-osheet{top:40px}
+  #view-proto .tm-osheet .scr-top{padding-top:8px}
+  #view-proto .tm-age{margin-top:90px}
+  #view-proto .tools{order:3;padding:0 12px}
+  #view-proto .demo-cap{position:fixed;left:12px;right:12px;bottom:12px;width:auto;max-width:none;z-index:95}
+  #view-proto .chips{order:4;padding:0 12px}
+  #view-proto .chiphint{order:5}
+}
+
+/* overview: walkthrough button */
+.herobtns{display:flex;justify-content:center;margin-top:30px}
+.ghostbtn{display:inline-flex;align-items:center;gap:10px;background:#15161A;border:1px solid var(--hair2);color:var(--ink);font-size:14px;
+  font-weight:700;padding:9px 20px 9px 9px;border-radius:30px;transition:.16s}
+.ghostbtn:hover{background:#1C1D22}
+.ghostbtn .pl{width:30px;height:30px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
+.ghostbtn .pl svg{width:12px;height:12px;fill:#fff;margin-left:2px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:470px;margin:0 auto}
+.chip{padding:7px 13px;border-radius:20px;border:1px solid #2A2C32;background:#15161A;
+  font:600 12px/1 'Inter',sans-serif;color:var(--ink2);transition:.14s}
+.chip:hover{color:var(--ink);border-color:#3A3C44}
+.chip.offer{border-style:dashed;border-color:var(--accent-lift);color:var(--accent-lift)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;border-style:solid}
+.chiphint{text-align:center;font-size:11px;color:var(--ink3);margin:0;max-width:430px}
+
+/* ============ the short panel ============ */
+.pn{padding:30px 30px 60px}
+.pn-n{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+.pn-n.ctx{color:var(--panel-muted)}
+.pn-t{font-size:23px;line-height:1.18;font-weight:700;letter-spacing:-.028em;margin:8px 0 0;color:var(--panel-ink)}
+.pn-hyp{font-size:15px;line-height:1.62;color:#2E3038;margin:16px 0 0}
+.pn-hyp b{font-weight:700;color:var(--panel-ink)}
+.pn-out{margin-top:22px;border-top:1px solid var(--panel-line);padding-top:18px}
+.pn-out .lab{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--panel-muted)}
+.pn-out .v{font-size:31px;font-weight:700;letter-spacing:-.035em;color:var(--accent-ink);margin-top:7px;line-height:1}
+.pn-kept{margin-top:22px;font-size:12.5px;line-height:1.55;color:var(--panel-muted)}
+.pn-kept b{color:#2E3038;font-weight:700}
+.pn-foot{font-size:11.5px;line-height:1.55;color:var(--panel-muted);border-top:1px solid var(--panel-line);
+  padding-top:14px;margin-top:26px}
+.pn-sep{height:1px;background:var(--panel-line);margin:26px 0}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-in">
+    <div class="nav-brand">
+      <span class="mk"><svg viewBox="0 0 120 44" fill="currentColor" aria-label="Taimi"><path d="M31.658 14.4034C37.1522 14.4034 38.3473 19.0339 38.5009 19.4982C38.5133 19.5355 38.5175 19.5313 38.5175 19.5313V15.2242C38.5175 15.0045 38.6959 14.8221 38.92 14.8221H47.2609C47.4809 14.8221 47.6634 15.0003 47.6634 15.2242V35.2967L47.9913 41.1626C48.0037 41.3948 47.8211 41.5896 47.5887 41.5896H39.252C39.0362 41.5896 38.8578 41.4196 38.8495 41.2082L38.6088 36.9093C38.1316 37.8255 35.733 42 31.6041 42C29.1682 42 27.2718 40.8724 25.9729 38.6463C24.6076 36.3041 23.9229 32.7389 23.9229 28.2535C23.9229 23.7681 24.6284 20.2734 26.0185 17.8731C27.3547 15.5765 29.247 14.4075 31.658 14.4075V14.4034ZM60.7143 14.8179C60.9342 14.8179 61.1168 14.9962 61.1168 15.22V35.2967L61.4446 41.1626C61.4571 41.3948 61.2745 41.5937 61.0421 41.5937H52.7053C52.4896 41.5937 52.3111 41.4238 52.3028 41.2124L51.9708 35.3009V15.2242C51.9708 15.0045 52.1493 14.8221 52.3734 14.8221H60.7143V14.8179ZM26.8028 3.76598C27.0228 3.76598 27.2054 3.94424 27.2054 4.1681V10.6765C27.2054 10.9087 27.0062 11.0952 26.7738 11.0787L19.1757 10.5812V41.1833C19.1757 41.403 18.9972 41.5854 18.7731 41.5854H10.4322C10.2123 41.5854 10.0297 41.4072 10.0297 41.1833V10.5853L2.43157 11.0828C2.19504 11.0952 2 10.9128 2 10.6807V4.1681C2 3.94839 2.17844 3.76598 2.40252 3.76598H26.8028ZM116.08 14.8138C116.3 14.8138 116.482 14.992 116.482 15.2159C116.482 17.7737 116.491 28.3364 116.491 35.2926C116.491 38.0452 116.69 40.2382 116.789 41.1377C116.814 41.3782 116.623 41.5854 116.387 41.5854H108.071C107.855 41.5854 107.677 41.4155 107.668 41.2041L107.336 35.2926V15.2159C107.336 14.9962 107.515 14.8138 107.739 14.8138H116.08ZM81.4338 14.3743C83.8946 14.3743 85.7578 15.3195 86.9654 17.1684C87.7331 18.3457 88.0817 19.8464 88.2269 20.4558C88.2476 20.547 88.3763 20.5636 88.4178 20.4724C89.5465 17.9561 91.6297 14.3868 95.6964 14.3868C95.908 14.3702 96.0284 14.3743 96.0284 14.3743C98.4352 14.3743 100.327 15.5351 101.66 17.8275C103.05 20.2236 103.759 23.7059 103.759 28.1747V28.1664V35.2843L104.087 41.146C104.1 41.3782 103.917 41.573 103.685 41.573H95.3478C95.132 41.573 94.9536 41.403 94.9453 41.1916L94.6133 35.2843V28.1664C94.605 26.5746 94.5469 24.7754 94.19 23.4779C93.7875 22.0021 93.0074 21.2559 91.8911 21.2559C89.3847 21.2559 89.173 24.8708 89.173 28.2576V41.1792C89.173 41.3989 88.9946 41.5813 88.7705 41.5813H80.4254C80.2055 41.5813 80.0229 41.403 80.0229 41.1792V28.1747C80.0063 24.8293 79.8113 21.26 77.3048 21.26C74.7984 21.26 74.5868 24.8749 74.5868 28.2618V41.1833C74.5868 41.403 74.4083 41.5854 74.1843 41.5854H65.8433C65.6234 41.5854 65.4408 41.4072 65.4408 41.1833V15.2117C65.4408 14.992 65.6193 14.8096 65.8433 14.8096H74.1843C74.4083 14.8096 74.5909 14.9879 74.5951 15.2117V19.4277C74.5951 19.5396 74.7486 19.5687 74.7901 19.465C75.3503 18.0017 76.6865 16.5217 77.7115 15.6843C78.7655 14.8179 80.0271 14.3785 81.4504 14.3785L81.4338 14.3743ZM35.7994 21.289C34.098 21.289 33.0814 24.9785 33.0814 28.2908C33.0814 31.6031 34.0316 35.1143 35.7994 35.1143C37.4303 35.1143 38.3681 32.2207 38.5009 29.0702C38.5133 28.8131 38.5175 28.5437 38.5175 28.2908C38.5175 28.0379 38.5092 27.7809 38.5009 27.5239C38.3639 24.3401 37.3763 21.289 35.7994 21.289ZM56.4733 2C59.3822 2 61.6604 4.27588 61.6604 7.18188C61.6604 10.0879 59.3822 12.3638 56.4733 12.3638C53.5643 12.3638 51.2861 10.0879 51.2861 7.18188C51.2861 4.27588 53.5643 2 56.4733 2ZM111.839 2C114.748 2 117.026 4.27588 117.026 7.18188C117.026 10.0879 114.748 12.3638 111.839 12.3638C108.93 12.3638 106.652 10.0879 106.652 7.18188C106.652 4.27588 108.93 2 111.839 2Z"/></svg></span>
+      <b>Growth Audit</b><span>· Taimi</span>
+    </div>
+    <div class="nav-links">
+      <button class="on" data-view="over">Overview</button>
+      <button data-view="proto">Prototype</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= OVERVIEW ======================= -->
+<div class="view on" id="view-over">
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Growth Audit · October 2026</div>
+    <h1>Taimi</h1>
+    <p class="lede">Five ideas to unlock more revenue from the traffic you already have.</p>
+    <div class="meta">Prepared by <b>Adapty</b> · based on your live iOS flow and your App Store listing</div>
+    <div class="herobtns"><button class="ghostbtn" data-demo><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg></span>Watch the 30-second walkthrough</button></div>
+    <div class="stats">
+      <div class="stat"><b>30,000+</b><span>apps run subscriptions<br>on Adapty</span></div>
+      <div class="stat"><b>5</b><span>ideas, each rebuilt<br>as a working screen</span></div>
+      <div class="stat"><b>0</b><span>design changes<br>to your art direction</span></div>
+    </div>
+
+    <div class="fb">
+      <div class="fb-k">Built in Adapty Flow Builder</div>
+      <div class="fb-i">
+        <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>Millions of dollars</b> in subscription revenue pass through Flow Builder every month.</p>
+      </div>
+      <div class="fb-i">
+        <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>Nearly 500 apps</b> actively build their paywalls and onboarding in it — plenty of them past $100K MRR.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="wrap">
+    <div class="sec-k">What this is</div>
+    <h2>We signed up for Taimi the way a new member does, then rebuilt the parts we think are leaving money on the table.</h2>
+    <p class="body">Adapty powers subscriptions for <b>30,000+ apps</b>, so we get to see what actually moves conversion and revenue across the market rather than inside one app. We pointed that at Taimi: installed it, went through sign-up and every setup question, opened Plans, read your App Store listing and your website, and looked for gaps between what you already have and what you show people.</p>
+    <p class="body">What follows is five ideas — not fifteen. Each one is a hypothesis you can A/B test, and each one is built into a clickable prototype so you can see it rather than imagine it. <b>The prototype uses your design, not ours.</b></p>
+
+    <div class="notes">
+      <div class="note">
+        <h4>We did not redesign your app</h4>
+        <p>Every screen in the prototype is yours — your splash illustration, your condensed headlines, your violet buttons, your birthday wheel, your Gold, Silver and Bronze cards and your gift sheet. Only the order changed, plus a few things you already own but do not show at the right moment.</p>
+      </div>
+      <div class="note">
+        <h4>You may have tested some of this</h4>
+        <p>We are working from the outside, so we cannot see your experiment history. If one of these is something you have already run, tell us — we will go deeper on the rest rather than repeat it.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<div class="sec">
+  <div class="wrap">
+    <div class="sec-k">The five ideas</div>
+    <h2>Ranked by what we would test first.</h2>
+    <p class="body">Each one links straight to the screen in the prototype.</p>
+
+    <div class="ideas">
+      <button class="idea" data-jump="paywall">
+        <span class="no">01</span>
+        <span>
+          <h3>Show your plans when the profile is done</h3>
+          <p>Today setup ends on the People tab with “No users found, but still, there is a lot to discover on Taimi!”. Plans only open from Profile. Someone who has just told you exactly who they want to meet never sees an offer while they are most curious.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +15–20%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="loader">
+        <span class="no">02</span>
+        <span>
+          <h3>Read their answers back, not an empty feed</h3>
+          <p>Ten steps in — gender, sexuality, who they want to date, an age range — and the first thing they get back is that empty People tab. Show those answers at work instead: who Taimi is looking for, across 40M+ users in 138 countries.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–15%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="offer">
+        <span class="no">03</span>
+        <span>
+          <h3>Offer Taimi Bronze when they close Plans</h3>
+          <p>Closing Plans today just closes it. Your App Store lists Taimi Bronze at $0.99, and your own location sheet already sells Bronze as the way in. Offer it once, in your gift sheet, to the people who said no to Gold.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>ARPU +10–15%</b><span>second chance</span></span>
+      </button>
+
+      <button class="idea" data-jump="notif">
+        <span class="no">04</span>
+        <span>
+          <h3>Ask for notifications after the plans</h3>
+          <p>Step 10, Pick your notifications, sends people out of Taimi into iOS Settings to switch on Allow Notifications, in the middle of setup. Every trip out of the app is a chance not to come back before they see a price.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–15%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="paywall">
+        <span class="no">05</span>
+        <span>
+          <h3>Put your 4.4 stars on the plans screen</h3>
+          <p>4.4 from 215K ratings, 40M+ users and a five-star review already sit on your App Store page and in your screenshots. Plans shows none of it — only feature lists — at the one moment someone is deciding whether to pay.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–15%</b><span>to purchase</span></span>
+      </button>
+    </div>
+
+    <div class="band">
+      <div class="txt">
+        <div class="lab">Potential result</div>
+        <p>All five do one thing: <b>turn the end of setup into the moment Taimi earns</b> — a price people see, a reason to believe it, and a second chance for those who say no.</p>
+      </div>
+      <div class="nums">
+        <div><b>+25%</b><span>CR to purchase</span></div>
+        <div><b>+15%</b><span>ARPU</span></div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <div class="qr"><img src="img/qr.svg" alt="QR code for the prototype"><span><b>Or open it on your phone</b>Scan to try the flow in your hand.</span></div>
+      <button class="bigbtn" data-view="proto">Open the prototype
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <div class="wrap">
+    Impact ranges are Adapty's expected effect from teardowns and A/B tests across subscription apps — not measured lift for Taimi. Every price, rating, quote and feature line here and in the prototype comes from Taimi's own App Store listing, website and in-app screens. Portrait photography is from taimi.com.
+  </div>
+</div>
+</div><!-- /view-over -->
+
+<!-- ======================= PROTOTYPE ======================= -->
+<div class="view" id="view-proto">
+<div class="stage">
+  <div class="phonecol">
+    <div class="tools" id="tools">
+      <div class="seg" id="segLang"><button data-lang="en" class="on">EN</button><button data-lang="es">ES</button></div>
+      <div class="seg" id="segTheme"><button data-theme="light">Light</button><button data-theme="dark" class="on">Dark</button></div>
+      <button class="demo-btn" id="demoBtn"><svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>30-sec walkthrough</button>
+    </div>
+    <div class="phone">
+      <div class="phone-in" id="phoneIn">
+        <div class="island"></div>
+        <div class="sbar" id="sbar">
+          <span>9:41</span>
+          <span class="glyphs">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7.5" width="3" height="3.5" rx="1"/><rect x="4.5" y="5.5" width="3" height="5.5" rx="1"/><rect x="9" y="3" width="3" height="8" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 10.5 5.6 7.9a3.4 3.4 0 0 1 4.8 0L8 10.5Zm0-5.6a6.4 6.4 0 0 0-4.5 1.9L1.7 4.9a9 9 0 0 1 12.6 0l-1.8 1.9A6.4 6.4 0 0 0 8 4.9Z"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="20" height="10.8" rx="3" stroke="currentColor" stroke-opacity=".5"/><rect x="2.2" y="2.2" width="16.5" height="7.6" rx="1.8" fill="currentColor"/><path d="M22.3 4.1v3.8a2 2 0 0 0 0-3.8Z" fill="currentColor" fill-opacity=".5"/></svg>
+          </span>
+        </div>
+        <div class="homebar" id="homebar"></div>
+        <div class="finger" id="finger"></div>
+        <div class="screenwrap">
+
+<!-- WELCOME -->
+<section class="scr scr--welcome" data-id="welcome" data-fixed="1">
+  <div class="tm-splash"><img src="img/splash.jpg" alt="Taimi — Find Out What You're Into"></div>
+  <div class="scr-top"></div>
+  <div class="scr-body"></div>
+  <div class="scr-foot">
+    <button class="tm-wbtn w" data-go="birthday"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg><span data-t="wel.phone"></span></button>
+    <button class="tm-wbtn d" id="welOther" data-go="birthday"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><span data-t="wel.other"></span></button>
+    <p class="tm-legal" data-th="wel.legal"></p>
+  </div>
+</section>
+
+<!-- BIRTHDAY -->
+<section class="scr" data-id="birthday">
+  <div class="scr-top">
+    <div class="tm-prog"><i style="width:18%"></i></div>
+    <h2 class="tm-h" data-t="bd.h"></h2>
+    <p class="tm-sub" data-t="bd.sub"></p>
+  </div>
+  <div class="scr-body">
+    <p class="tm-age" id="ageLine"></p>
+    <div class="tm-wheels">
+      <div class="tm-wbar"></div>
+      <div class="tm-wheel d" id="wD"></div>
+      <div class="tm-wheel m" id="wM"></div>
+      <div class="tm-wheel y" id="wY"></div>
+    </div>
+  </div>
+  <div class="scr-foot"><button class="tm-btn" data-go="gender" data-t="cont"></button></div>
+</section>
+
+<!-- GENDER -->
+<section class="scr" data-id="gender">
+  <div class="scr-top">
+    <div class="tm-prog"><i style="width:30%"></i></div>
+    <h2 class="tm-h" data-t="g.h"></h2>
+    <p class="tm-sub" data-t="g.sub"></p>
+  </div>
+  <div class="scr-body"><div class="tm-rows" id="genderList"></div></div>
+  <div class="scr-foot"><button class="tm-btn" id="genderBtn" data-go="sexuality" data-t="cont"></button></div>
+</section>
+
+<!-- SEXUALITY -->
+<section class="scr" data-id="sexuality">
+  <div class="scr-top">
+    <div class="tm-prog"><i style="width:42%"></i></div>
+    <h2 class="tm-h" data-t="sx.h"></h2>
+    <p class="tm-sub" data-t="sx.sub"></p>
+  </div>
+  <div class="scr-body"><div class="tm-rows" id="sexList"></div><div style="height:12px"></div></div>
+  <div class="scr-foot"><button class="tm-btn" id="sexBtn" data-go="date" data-t="cont"></button></div>
+</section>
+
+<!-- WHO TO DATE -->
+<section class="scr" data-id="date">
+  <div class="scr-top">
+    <div class="tm-prog"><i style="width:54%"></i></div>
+    <h2 class="tm-h" data-t="dt.h"></h2>
+  </div>
+  <div class="scr-body">
+    <div class="tm-openrow"><span data-t="dt.open"></span><button class="tm-tg" id="openTg" aria-label="Open to everyone"><i></i></button></div>
+    <div class="tm-rows" id="dateList" style="margin-top:18px"></div>
+  </div>
+  <div class="scr-foot"><button class="tm-btn" id="dateBtn" data-go="age" data-t="cont"></button></div>
+</section>
+
+<!-- AGE PREFERENCES -->
+<section class="scr" data-id="age">
+  <div class="scr-top">
+    <div class="tm-prog"><i style="width:100%"></i></div>
+    <h2 class="tm-h" data-t="ag.h"></h2>
+    <p class="tm-sub" data-t="ag.sub"></p>
+  </div>
+  <div class="scr-body">
+    <img class="tm-collage dk" src="img/collage-a.png" alt="">
+    <img class="tm-collage lt" src="img/collage-a.png" alt="">
+    <div class="tm-rangehd"><span data-t="ag.range"></span><span id="rangeVal"></span></div>
+    <div class="tm-range" id="range"><div class="tr"></div><div class="fill" id="rFill"></div><div class="th" id="rA"></div><div class="th" id="rB"></div></div>
+  </div>
+  <div class="scr-foot"><button class="tm-btn" id="ageBtn" data-go="loader" data-t="cont"></button></div>
+</section>
+
+<!-- LOADER -->
+<section class="scr scr--load" data-id="loader" data-fixed="1">
+  <div class="scr-top" style="padding-top:0"></div>
+  <div class="scr-body">
+    <div class="tm-loadwrap">
+      <div class="tm-ringload">
+        <svg class="r" viewBox="0 0 120 120"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#793BFC"/><stop offset="1" stop-color="#E050EB"/></linearGradient></defs>
+          <circle cx="60" cy="60" r="54" fill="none" stroke="#23262D" stroke-width="6"/>
+          <circle id="ringArc" cx="60" cy="60" r="54" fill="none" stroke="url(#lg1)" stroke-width="6" stroke-linecap="round" stroke-dasharray="339.3" stroke-dashoffset="339.3"/></svg>
+        <div class="lg"><svg viewBox="0 0 120 44" fill="currentColor" aria-label="Taimi"><path d="M31.658 14.4034C37.1522 14.4034 38.3473 19.0339 38.5009 19.4982C38.5133 19.5355 38.5175 19.5313 38.5175 19.5313V15.2242C38.5175 15.0045 38.6959 14.8221 38.92 14.8221H47.2609C47.4809 14.8221 47.6634 15.0003 47.6634 15.2242V35.2967L47.9913 41.1626C48.0037 41.3948 47.8211 41.5896 47.5887 41.5896H39.252C39.0362 41.5896 38.8578 41.4196 38.8495 41.2082L38.6088 36.9093C38.1316 37.8255 35.733 42 31.6041 42C29.1682 42 27.2718 40.8724 25.9729 38.6463C24.6076 36.3041 23.9229 32.7389 23.9229 28.2535C23.9229 23.7681 24.6284 20.2734 26.0185 17.8731C27.3547 15.5765 29.247 14.4075 31.658 14.4075V14.4034ZM60.7143 14.8179C60.9342 14.8179 61.1168 14.9962 61.1168 15.22V35.2967L61.4446 41.1626C61.4571 41.3948 61.2745 41.5937 61.0421 41.5937H52.7053C52.4896 41.5937 52.3111 41.4238 52.3028 41.2124L51.9708 35.3009V15.2242C51.9708 15.0045 52.1493 14.8221 52.3734 14.8221H60.7143V14.8179ZM26.8028 3.76598C27.0228 3.76598 27.2054 3.94424 27.2054 4.1681V10.6765C27.2054 10.9087 27.0062 11.0952 26.7738 11.0787L19.1757 10.5812V41.1833C19.1757 41.403 18.9972 41.5854 18.7731 41.5854H10.4322C10.2123 41.5854 10.0297 41.4072 10.0297 41.1833V10.5853L2.43157 11.0828C2.19504 11.0952 2 10.9128 2 10.6807V4.1681C2 3.94839 2.17844 3.76598 2.40252 3.76598H26.8028ZM116.08 14.8138C116.3 14.8138 116.482 14.992 116.482 15.2159C116.482 17.7737 116.491 28.3364 116.491 35.2926C116.491 38.0452 116.69 40.2382 116.789 41.1377C116.814 41.3782 116.623 41.5854 116.387 41.5854H108.071C107.855 41.5854 107.677 41.4155 107.668 41.2041L107.336 35.2926V15.2159C107.336 14.9962 107.515 14.8138 107.739 14.8138H116.08ZM81.4338 14.3743C83.8946 14.3743 85.7578 15.3195 86.9654 17.1684C87.7331 18.3457 88.0817 19.8464 88.2269 20.4558C88.2476 20.547 88.3763 20.5636 88.4178 20.4724C89.5465 17.9561 91.6297 14.3868 95.6964 14.3868C95.908 14.3702 96.0284 14.3743 96.0284 14.3743C98.4352 14.3743 100.327 15.5351 101.66 17.8275C103.05 20.2236 103.759 23.7059 103.759 28.1747V28.1664V35.2843L104.087 41.146C104.1 41.3782 103.917 41.573 103.685 41.573H95.3478C95.132 41.573 94.9536 41.403 94.9453 41.1916L94.6133 35.2843V28.1664C94.605 26.5746 94.5469 24.7754 94.19 23.4779C93.7875 22.0021 93.0074 21.2559 91.8911 21.2559C89.3847 21.2559 89.173 24.8708 89.173 28.2576V41.1792C89.173 41.3989 88.9946 41.5813 88.7705 41.5813H80.4254C80.2055 41.5813 80.0229 41.403 80.0229 41.1792V28.1747C80.0063 24.8293 79.8113 21.26 77.3048 21.26C74.7984 21.26 74.5868 24.8749 74.5868 28.2618V41.1833C74.5868 41.403 74.4083 41.5854 74.1843 41.5854H65.8433C65.6234 41.5854 65.4408 41.4072 65.4408 41.1833V15.2117C65.4408 14.992 65.6193 14.8096 65.8433 14.8096H74.1843C74.4083 14.8096 74.5909 14.9879 74.5951 15.2117V19.4277C74.5951 19.5396 74.7486 19.5687 74.7901 19.465C75.3503 18.0017 76.6865 16.5217 77.7115 15.6843C78.7655 14.8179 80.0271 14.3785 81.4504 14.3785L81.4338 14.3743ZM35.7994 21.289C34.098 21.289 33.0814 24.9785 33.0814 28.2908C33.0814 31.6031 34.0316 35.1143 35.7994 35.1143C37.4303 35.1143 38.3681 32.2207 38.5009 29.0702C38.5133 28.8131 38.5175 28.5437 38.5175 28.2908C38.5175 28.0379 38.5092 27.7809 38.5009 27.5239C38.3639 24.3401 37.3763 21.289 35.7994 21.289ZM56.4733 2C59.3822 2 61.6604 4.27588 61.6604 7.18188C61.6604 10.0879 59.3822 12.3638 56.4733 12.3638C53.5643 12.3638 51.2861 10.0879 51.2861 7.18188C51.2861 4.27588 53.5643 2 56.4733 2ZM111.839 2C114.748 2 117.026 4.27588 117.026 7.18188C117.026 10.0879 114.748 12.3638 111.839 12.3638C108.93 12.3638 106.652 10.0879 106.652 7.18188C106.652 4.27588 108.93 2 111.839 2Z"/></svg></div>
+      </div>
+      <h2 class="tm-load-h" data-t="ld.h"></h2>
+      <div class="tm-lsteps" id="loadSteps">
+        <div class="tm-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t" id="ls1"></span></div>
+        <div class="tm-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t" id="ls2"></span></div>
+        <div class="tm-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t" id="ls3"></span></div>
+        <div class="tm-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t" id="ls4"></span></div>
+      </div>
+      <div class="tm-review">
+        <h5>Great app!</h5>
+        <div class="st">★★★★★<span>kusialitvika · App Store</span></div>
+        <p>“Taimi is an amazing app for dating and socializing! I love its user-friendly interface, safe environment, and the opportunity to connect with like-minded people…”</p>
+      </div>
+    </div>
+  </div>
+  <div class="scr-foot"></div>
+</section>
+
+<!-- PAYOFF -->
+<section class="scr" data-id="payoff">
+  <div class="scr-top">
+    <div class="tm-avs"><img src="img/space05.webp" alt=""><img src="img/space07.webp" alt=""><span class="me"><img src="img/moments02.webp" alt=""></span><img src="img/space06.webp" alt=""><img src="img/space02.webp" alt=""></div>
+    <p class="tm-kick" data-t="po.kick"></p>
+    <h2 class="tm-h" style="margin-top:4px" data-t="po.h"></h2>
+  </div>
+  <div class="scr-body">
+    <div class="tm-pcard">
+      <div class="tm-plab" data-t="po.you"></div>
+      <div class="tm-pval" id="poYou"></div>
+      <div class="tm-chips" id="poSex"></div>
+    </div>
+    <div class="tm-pcard">
+      <div class="tm-plab" data-t="po.look"></div>
+      <div class="tm-chips" id="poWho"></div>
+      <div class="tm-agerow"><span><span class="tm-plab" data-t="po.ages"></span> <b id="poAge"></b></span>
+        <span class="tm-pm"><button id="ageMinus" aria-label="Narrower">−</button><button id="agePlus" aria-label="Wider">+</button></span></div>
+      <div class="tm-scale"><svg viewBox="0 0 24 24" fill="none" stroke="#A884FF" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z"/></svg><span data-th="po.scale"></span></div>
+    </div>
+    <div class="tm-lock">
+      <span class="ph"><img src="img/space07.webp" alt=""><img src="img/space05.webp" alt=""><img src="img/space06.webp" alt=""></span>
+      <div><b data-t="po.lockT"></b><span data-t="po.lockD"></span></div>
+    </div>
+    <div style="height:10px"></div>
+  </div>
+  <div class="scr-foot"><button class="tm-btn" data-go="paywall" data-t="cont"></button></div>
+</section>
+
+<!-- PAYWALL -->
+<section class="scr scr--pay" data-id="paywall">
+  <div class="scr-top">
+    <div class="tm-paybar"><span data-t="pw.plans"></span><button class="tm-x" id="payClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <h2 class="tm-payh" id="payH"></h2>
+    <p class="tm-paysub" data-t="pw.sub"></p>
+    <div class="tm-tiers" id="tiers">
+      <button class="tm-tier gold" data-v="gold"><span class="nm"><svg viewBox="0 0 120 44" fill="currentColor" aria-label="Taimi"><path d="M31.658 14.4034C37.1522 14.4034 38.3473 19.0339 38.5009 19.4982C38.5133 19.5355 38.5175 19.5313 38.5175 19.5313V15.2242C38.5175 15.0045 38.6959 14.8221 38.92 14.8221H47.2609C47.4809 14.8221 47.6634 15.0003 47.6634 15.2242V35.2967L47.9913 41.1626C48.0037 41.3948 47.8211 41.5896 47.5887 41.5896H39.252C39.0362 41.5896 38.8578 41.4196 38.8495 41.2082L38.6088 36.9093C38.1316 37.8255 35.733 42 31.6041 42C29.1682 42 27.2718 40.8724 25.9729 38.6463C24.6076 36.3041 23.9229 32.7389 23.9229 28.2535C23.9229 23.7681 24.6284 20.2734 26.0185 17.8731C27.3547 15.5765 29.247 14.4075 31.658 14.4075V14.4034ZM60.7143 14.8179C60.9342 14.8179 61.1168 14.9962 61.1168 15.22V35.2967L61.4446 41.1626C61.4571 41.3948 61.2745 41.5937 61.0421 41.5937H52.7053C52.4896 41.5937 52.3111 41.4238 52.3028 41.2124L51.9708 35.3009V15.2242C51.9708 15.0045 52.1493 14.8221 52.3734 14.8221H60.7143V14.8179ZM26.8028 3.76598C27.0228 3.76598 27.2054 3.94424 27.2054 4.1681V10.6765C27.2054 10.9087 27.0062 11.0952 26.7738 11.0787L19.1757 10.5812V41.1833C19.1757 41.403 18.9972 41.5854 18.7731 41.5854H10.4322C10.2123 41.5854 10.0297 41.4072 10.0297 41.1833V10.5853L2.43157 11.0828C2.19504 11.0952 2 10.9128 2 10.6807V4.1681C2 3.94839 2.17844 3.76598 2.40252 3.76598H26.8028ZM116.08 14.8138C116.3 14.8138 116.482 14.992 116.482 15.2159C116.482 17.7737 116.491 28.3364 116.491 35.2926C116.491 38.0452 116.69 40.2382 116.789 41.1377C116.814 41.3782 116.623 41.5854 116.387 41.5854H108.071C107.855 41.5854 107.677 41.4155 107.668 41.2041L107.336 35.2926V15.2159C107.336 14.9962 107.515 14.8138 107.739 14.8138H116.08ZM81.4338 14.3743C83.8946 14.3743 85.7578 15.3195 86.9654 17.1684C87.7331 18.3457 88.0817 19.8464 88.2269 20.4558C88.2476 20.547 88.3763 20.5636 88.4178 20.4724C89.5465 17.9561 91.6297 14.3868 95.6964 14.3868C95.908 14.3702 96.0284 14.3743 96.0284 14.3743C98.4352 14.3743 100.327 15.5351 101.66 17.8275C103.05 20.2236 103.759 23.7059 103.759 28.1747V28.1664V35.2843L104.087 41.146C104.1 41.3782 103.917 41.573 103.685 41.573H95.3478C95.132 41.573 94.9536 41.403 94.9453 41.1916L94.6133 35.2843V28.1664C94.605 26.5746 94.5469 24.7754 94.19 23.4779C93.7875 22.0021 93.0074 21.2559 91.8911 21.2559C89.3847 21.2559 89.173 24.8708 89.173 28.2576V41.1792C89.173 41.3989 88.9946 41.5813 88.7705 41.5813H80.4254C80.2055 41.5813 80.0229 41.403 80.0229 41.1792V28.1747C80.0063 24.8293 79.8113 21.26 77.3048 21.26C74.7984 21.26 74.5868 24.8749 74.5868 28.2618V41.1833C74.5868 41.403 74.4083 41.5854 74.1843 41.5854H65.8433C65.6234 41.5854 65.4408 41.4072 65.4408 41.1833V15.2117C65.4408 14.992 65.6193 14.8096 65.8433 14.8096H74.1843C74.4083 14.8096 74.5909 14.9879 74.5951 15.2117V19.4277C74.5951 19.5396 74.7486 19.5687 74.7901 19.465C75.3503 18.0017 76.6865 16.5217 77.7115 15.6843C78.7655 14.8179 80.0271 14.3785 81.4504 14.3785L81.4338 14.3743ZM35.7994 21.289C34.098 21.289 33.0814 24.9785 33.0814 28.2908C33.0814 31.6031 34.0316 35.1143 35.7994 35.1143C37.4303 35.1143 38.3681 32.2207 38.5009 29.0702C38.5133 28.8131 38.5175 28.5437 38.5175 28.2908C38.5175 28.0379 38.5092 27.7809 38.5009 27.5239C38.3639 24.3401 37.3763 21.289 35.7994 21.289ZM56.4733 2C59.3822 2 61.6604 4.27588 61.6604 7.18188C61.6604 10.0879 59.3822 12.3638 56.4733 12.3638C53.5643 12.3638 51.2861 10.0879 51.2861 7.18188C51.2861 4.27588 53.5643 2 56.4733 2ZM111.839 2C114.748 2 117.026 4.27588 117.026 7.18188C117.026 10.0879 114.748 12.3638 111.839 12.3638C108.93 12.3638 106.652 10.0879 106.652 7.18188C106.652 4.27588 108.93 2 111.839 2Z"/></svg><span class="pill">GOLD</span></span><span class="tag" data-t="pw.best"></span></button>
+      <button class="tm-tier silver" data-v="silver"><span class="nm"><svg viewBox="0 0 120 44" fill="currentColor" aria-label="Taimi"><path d="M31.658 14.4034C37.1522 14.4034 38.3473 19.0339 38.5009 19.4982C38.5133 19.5355 38.5175 19.5313 38.5175 19.5313V15.2242C38.5175 15.0045 38.6959 14.8221 38.92 14.8221H47.2609C47.4809 14.8221 47.6634 15.0003 47.6634 15.2242V35.2967L47.9913 41.1626C48.0037 41.3948 47.8211 41.5896 47.5887 41.5896H39.252C39.0362 41.5896 38.8578 41.4196 38.8495 41.2082L38.6088 36.9093C38.1316 37.8255 35.733 42 31.6041 42C29.1682 42 27.2718 40.8724 25.9729 38.6463C24.6076 36.3041 23.9229 32.7389 23.9229 28.2535C23.9229 23.7681 24.6284 20.2734 26.0185 17.8731C27.3547 15.5765 29.247 14.4075 31.658 14.4075V14.4034ZM60.7143 14.8179C60.9342 14.8179 61.1168 14.9962 61.1168 15.22V35.2967L61.4446 41.1626C61.4571 41.3948 61.2745 41.5937 61.0421 41.5937H52.7053C52.4896 41.5937 52.3111 41.4238 52.3028 41.2124L51.9708 35.3009V15.2242C51.9708 15.0045 52.1493 14.8221 52.3734 14.8221H60.7143V14.8179ZM26.8028 3.76598C27.0228 3.76598 27.2054 3.94424 27.2054 4.1681V10.6765C27.2054 10.9087 27.0062 11.0952 26.7738 11.0787L19.1757 10.5812V41.1833C19.1757 41.403 18.9972 41.5854 18.7731 41.5854H10.4322C10.2123 41.5854 10.0297 41.4072 10.0297 41.1833V10.5853L2.43157 11.0828C2.19504 11.0952 2 10.9128 2 10.6807V4.1681C2 3.94839 2.17844 3.76598 2.40252 3.76598H26.8028ZM116.08 14.8138C116.3 14.8138 116.482 14.992 116.482 15.2159C116.482 17.7737 116.491 28.3364 116.491 35.2926C116.491 38.0452 116.69 40.2382 116.789 41.1377C116.814 41.3782 116.623 41.5854 116.387 41.5854H108.071C107.855 41.5854 107.677 41.4155 107.668 41.2041L107.336 35.2926V15.2159C107.336 14.9962 107.515 14.8138 107.739 14.8138H116.08ZM81.4338 14.3743C83.8946 14.3743 85.7578 15.3195 86.9654 17.1684C87.7331 18.3457 88.0817 19.8464 88.2269 20.4558C88.2476 20.547 88.3763 20.5636 88.4178 20.4724C89.5465 17.9561 91.6297 14.3868 95.6964 14.3868C95.908 14.3702 96.0284 14.3743 96.0284 14.3743C98.4352 14.3743 100.327 15.5351 101.66 17.8275C103.05 20.2236 103.759 23.7059 103.759 28.1747V28.1664V35.2843L104.087 41.146C104.1 41.3782 103.917 41.573 103.685 41.573H95.3478C95.132 41.573 94.9536 41.403 94.9453 41.1916L94.6133 35.2843V28.1664C94.605 26.5746 94.5469 24.7754 94.19 23.4779C93.7875 22.0021 93.0074 21.2559 91.8911 21.2559C89.3847 21.2559 89.173 24.8708 89.173 28.2576V41.1792C89.173 41.3989 88.9946 41.5813 88.7705 41.5813H80.4254C80.2055 41.5813 80.0229 41.403 80.0229 41.1792V28.1747C80.0063 24.8293 79.8113 21.26 77.3048 21.26C74.7984 21.26 74.5868 24.8749 74.5868 28.2618V41.1833C74.5868 41.403 74.4083 41.5854 74.1843 41.5854H65.8433C65.6234 41.5854 65.4408 41.4072 65.4408 41.1833V15.2117C65.4408 14.992 65.6193 14.8096 65.8433 14.8096H74.1843C74.4083 14.8096 74.5909 14.9879 74.5951 15.2117V19.4277C74.5951 19.5396 74.7486 19.5687 74.7901 19.465C75.3503 18.0017 76.6865 16.5217 77.7115 15.6843C78.7655 14.8179 80.0271 14.3785 81.4504 14.3785L81.4338 14.3743ZM35.7994 21.289C34.098 21.289 33.0814 24.9785 33.0814 28.2908C33.0814 31.6031 34.0316 35.1143 35.7994 35.1143C37.4303 35.1143 38.3681 32.2207 38.5009 29.0702C38.5133 28.8131 38.5175 28.5437 38.5175 28.2908C38.5175 28.0379 38.5092 27.7809 38.5009 27.5239C38.3639 24.3401 37.3763 21.289 35.7994 21.289ZM56.4733 2C59.3822 2 61.6604 4.27588 61.6604 7.18188C61.6604 10.0879 59.3822 12.3638 56.4733 12.3638C53.5643 12.3638 51.2861 10.0879 51.2861 7.18188C51.2861 4.27588 53.5643 2 56.4733 2ZM111.839 2C114.748 2 117.026 4.27588 117.026 7.18188C117.026 10.0879 114.748 12.3638 111.839 12.3638C108.93 12.3638 106.652 10.0879 106.652 7.18188C106.652 4.27588 108.93 2 111.839 2Z"/></svg><span class="pill">SILVER</span></span><span class="tag" data-t="pw.pop"></span></button>
+      <button class="tm-tier bronze" data-v="bronze"><span class="nm"><svg viewBox="0 0 120 44" fill="currentColor" aria-label="Taimi"><path d="M31.658 14.4034C37.1522 14.4034 38.3473 19.0339 38.5009 19.4982C38.5133 19.5355 38.5175 19.5313 38.5175 19.5313V15.2242C38.5175 15.0045 38.6959 14.8221 38.92 14.8221H47.2609C47.4809 14.8221 47.6634 15.0003 47.6634 15.2242V35.2967L47.9913 41.1626C48.0037 41.3948 47.8211 41.5896 47.5887 41.5896H39.252C39.0362 41.5896 38.8578 41.4196 38.8495 41.2082L38.6088 36.9093C38.1316 37.8255 35.733 42 31.6041 42C29.1682 42 27.2718 40.8724 25.9729 38.6463C24.6076 36.3041 23.9229 32.7389 23.9229 28.2535C23.9229 23.7681 24.6284 20.2734 26.0185 17.8731C27.3547 15.5765 29.247 14.4075 31.658 14.4075V14.4034ZM60.7143 14.8179C60.9342 14.8179 61.1168 14.9962 61.1168 15.22V35.2967L61.4446 41.1626C61.4571 41.3948 61.2745 41.5937 61.0421 41.5937H52.7053C52.4896 41.5937 52.3111 41.4238 52.3028 41.2124L51.9708 35.3009V15.2242C51.9708 15.0045 52.1493 14.8221 52.3734 14.8221H60.7143V14.8179ZM26.8028 3.76598C27.0228 3.76598 27.2054 3.94424 27.2054 4.1681V10.6765C27.2054 10.9087 27.0062 11.0952 26.7738 11.0787L19.1757 10.5812V41.1833C19.1757 41.403 18.9972 41.5854 18.7731 41.5854H10.4322C10.2123 41.5854 10.0297 41.4072 10.0297 41.1833V10.5853L2.43157 11.0828C2.19504 11.0952 2 10.9128 2 10.6807V4.1681C2 3.94839 2.17844 3.76598 2.40252 3.76598H26.8028ZM116.08 14.8138C116.3 14.8138 116.482 14.992 116.482 15.2159C116.482 17.7737 116.491 28.3364 116.491 35.2926C116.491 38.0452 116.69 40.2382 116.789 41.1377C116.814 41.3782 116.623 41.5854 116.387 41.5854H108.071C107.855 41.5854 107.677 41.4155 107.668 41.2041L107.336 35.2926V15.2159C107.336 14.9962 107.515 14.8138 107.739 14.8138H116.08ZM81.4338 14.3743C83.8946 14.3743 85.7578 15.3195 86.9654 17.1684C87.7331 18.3457 88.0817 19.8464 88.2269 20.4558C88.2476 20.547 88.3763 20.5636 88.4178 20.4724C89.5465 17.9561 91.6297 14.3868 95.6964 14.3868C95.908 14.3702 96.0284 14.3743 96.0284 14.3743C98.4352 14.3743 100.327 15.5351 101.66 17.8275C103.05 20.2236 103.759 23.7059 103.759 28.1747V28.1664V35.2843L104.087 41.146C104.1 41.3782 103.917 41.573 103.685 41.573H95.3478C95.132 41.573 94.9536 41.403 94.9453 41.1916L94.6133 35.2843V28.1664C94.605 26.5746 94.5469 24.7754 94.19 23.4779C93.7875 22.0021 93.0074 21.2559 91.8911 21.2559C89.3847 21.2559 89.173 24.8708 89.173 28.2576V41.1792C89.173 41.3989 88.9946 41.5813 88.7705 41.5813H80.4254C80.2055 41.5813 80.0229 41.403 80.0229 41.1792V28.1747C80.0063 24.8293 79.8113 21.26 77.3048 21.26C74.7984 21.26 74.5868 24.8749 74.5868 28.2618V41.1833C74.5868 41.403 74.4083 41.5854 74.1843 41.5854H65.8433C65.6234 41.5854 65.4408 41.4072 65.4408 41.1833V15.2117C65.4408 14.992 65.6193 14.8096 65.8433 14.8096H74.1843C74.4083 14.8096 74.5909 14.9879 74.5951 15.2117V19.4277C74.5951 19.5396 74.7486 19.5687 74.7901 19.465C75.3503 18.0017 76.6865 16.5217 77.7115 15.6843C78.7655 14.8179 80.0271 14.3785 81.4504 14.3785L81.4338 14.3743ZM35.7994 21.289C34.098 21.289 33.0814 24.9785 33.0814 28.2908C33.0814 31.6031 34.0316 35.1143 35.7994 35.1143C37.4303 35.1143 38.3681 32.2207 38.5009 29.0702C38.5133 28.8131 38.5175 28.5437 38.5175 28.2908C38.5175 28.0379 38.5092 27.7809 38.5009 27.5239C38.3639 24.3401 37.3763 21.289 35.7994 21.289ZM56.4733 2C59.3822 2 61.6604 4.27588 61.6604 7.18188C61.6604 10.0879 59.3822 12.3638 56.4733 12.3638C53.5643 12.3638 51.2861 10.0879 51.2861 7.18188C51.2861 4.27588 53.5643 2 56.4733 2ZM111.839 2C114.748 2 117.026 4.27588 117.026 7.18188C117.026 10.0879 114.748 12.3638 111.839 12.3638C108.93 12.3638 106.652 10.0879 106.652 7.18188C106.652 4.27588 108.93 2 111.839 2Z"/></svg><span class="pill">BRONZE</span></span><span class="tag" data-t="pw.basic"></span></button>
+    </div>
+    <div class="tm-dots" id="tierDots"><i></i><i></i><i></i></div>
+  </div>
+  <div class="scr-body">
+    <div class="tm-proof">
+      <div><b>4.4 ★</b><span data-t="pw.p1"></span></div>
+      <div><b>40M+</b><span data-t="pw.p2"></span></div>
+      <div><b>#41</b><span data-t="pw.p3"></span></div>
+    </div>
+    <div class="tm-quote">“Taimi is an amazing app for dating and socializing! I love its user-friendly interface, safe environment…” <b>— kusialitvika, ★★★★★</b></div>
+    <div id="featList"></div>
+    <div style="height:6px"></div>
+  </div>
+  <div class="scr-foot">
+    <button class="tm-paybtn gold" id="payCta" data-t="pw.cta"></button>
+    <a class="tm-terms" data-t="pw.terms"></a>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="scr scr--offer sheet" data-id="offer">
+  <div class="tm-dim"></div>
+  <div class="tm-osheet">
+    <div class="scr-top">
+      <div class="tm-handle"></div>
+      <button class="tm-x" id="offClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="scr-body">
+      <img class="tm-gift" src="img/gift-a.png" alt="">
+      <h2 class="tm-oh" id="offH"></h2>
+      <p class="tm-os" data-t="of.sub"></p>
+      <div class="tm-oprice"><span class="nm"><svg viewBox="0 0 120 44" fill="currentColor" aria-label="Taimi"><path d="M31.658 14.4034C37.1522 14.4034 38.3473 19.0339 38.5009 19.4982C38.5133 19.5355 38.5175 19.5313 38.5175 19.5313V15.2242C38.5175 15.0045 38.6959 14.8221 38.92 14.8221H47.2609C47.4809 14.8221 47.6634 15.0003 47.6634 15.2242V35.2967L47.9913 41.1626C48.0037 41.3948 47.8211 41.5896 47.5887 41.5896H39.252C39.0362 41.5896 38.8578 41.4196 38.8495 41.2082L38.6088 36.9093C38.1316 37.8255 35.733 42 31.6041 42C29.1682 42 27.2718 40.8724 25.9729 38.6463C24.6076 36.3041 23.9229 32.7389 23.9229 28.2535C23.9229 23.7681 24.6284 20.2734 26.0185 17.8731C27.3547 15.5765 29.247 14.4075 31.658 14.4075V14.4034ZM60.7143 14.8179C60.9342 14.8179 61.1168 14.9962 61.1168 15.22V35.2967L61.4446 41.1626C61.4571 41.3948 61.2745 41.5937 61.0421 41.5937H52.7053C52.4896 41.5937 52.3111 41.4238 52.3028 41.2124L51.9708 35.3009V15.2242C51.9708 15.0045 52.1493 14.8221 52.3734 14.8221H60.7143V14.8179ZM26.8028 3.76598C27.0228 3.76598 27.2054 3.94424 27.2054 4.1681V10.6765C27.2054 10.9087 27.0062 11.0952 26.7738 11.0787L19.1757 10.5812V41.1833C19.1757 41.403 18.9972 41.5854 18.7731 41.5854H10.4322C10.2123 41.5854 10.0297 41.4072 10.0297 41.1833V10.5853L2.43157 11.0828C2.19504 11.0952 2 10.9128 2 10.6807V4.1681C2 3.94839 2.17844 3.76598 2.40252 3.76598H26.8028ZM116.08 14.8138C116.3 14.8138 116.482 14.992 116.482 15.2159C116.482 17.7737 116.491 28.3364 116.491 35.2926C116.491 38.0452 116.69 40.2382 116.789 41.1377C116.814 41.3782 116.623 41.5854 116.387 41.5854H108.071C107.855 41.5854 107.677 41.4155 107.668 41.2041L107.336 35.2926V15.2159C107.336 14.9962 107.515 14.8138 107.739 14.8138H116.08ZM81.4338 14.3743C83.8946 14.3743 85.7578 15.3195 86.9654 17.1684C87.7331 18.3457 88.0817 19.8464 88.2269 20.4558C88.2476 20.547 88.3763 20.5636 88.4178 20.4724C89.5465 17.9561 91.6297 14.3868 95.6964 14.3868C95.908 14.3702 96.0284 14.3743 96.0284 14.3743C98.4352 14.3743 100.327 15.5351 101.66 17.8275C103.05 20.2236 103.759 23.7059 103.759 28.1747V28.1664V35.2843L104.087 41.146C104.1 41.3782 103.917 41.573 103.685 41.573H95.3478C95.132 41.573 94.9536 41.403 94.9453 41.1916L94.6133 35.2843V28.1664C94.605 26.5746 94.5469 24.7754 94.19 23.4779C93.7875 22.0021 93.0074 21.2559 91.8911 21.2559C89.3847 21.2559 89.173 24.8708 89.173 28.2576V41.1792C89.173 41.3989 88.9946 41.5813 88.7705 41.5813H80.4254C80.2055 41.5813 80.0229 41.403 80.0229 41.1792V28.1747C80.0063 24.8293 79.8113 21.26 77.3048 21.26C74.7984 21.26 74.5868 24.8749 74.5868 28.2618V41.1833C74.5868 41.403 74.4083 41.5854 74.1843 41.5854H65.8433C65.6234 41.5854 65.4408 41.4072 65.4408 41.1833V15.2117C65.4408 14.992 65.6193 14.8096 65.8433 14.8096H74.1843C74.4083 14.8096 74.5909 14.9879 74.5951 15.2117V19.4277C74.5951 19.5396 74.7486 19.5687 74.7901 19.465C75.3503 18.0017 76.6865 16.5217 77.7115 15.6843C78.7655 14.8179 80.0271 14.3785 81.4504 14.3785L81.4338 14.3743ZM35.7994 21.289C34.098 21.289 33.0814 24.9785 33.0814 28.2908C33.0814 31.6031 34.0316 35.1143 35.7994 35.1143C37.4303 35.1143 38.3681 32.2207 38.5009 29.0702C38.5133 28.8131 38.5175 28.5437 38.5175 28.2908C38.5175 28.0379 38.5092 27.7809 38.5009 27.5239C38.3639 24.3401 37.3763 21.289 35.7994 21.289ZM56.4733 2C59.3822 2 61.6604 4.27588 61.6604 7.18188C61.6604 10.0879 59.3822 12.3638 56.4733 12.3638C53.5643 12.3638 51.2861 10.0879 51.2861 7.18188C51.2861 4.27588 53.5643 2 56.4733 2ZM111.839 2C114.748 2 117.026 4.27588 117.026 7.18188C117.026 10.0879 114.748 12.3638 111.839 12.3638C108.93 12.3638 106.652 10.0879 106.652 7.18188C106.652 4.27588 108.93 2 111.839 2Z"/></svg><span class="pill">BRONZE</span></span><b>$0.99</b></div>
+      <p class="tm-ofine" data-t="of.fine"></p>
+      <div id="offFeat"></div>
+      <div style="height:8px"></div>
+    </div>
+    <div class="scr-foot">
+      <button class="tm-btn" id="offerCta" data-t="of.cta"></button>
+      <button class="tm-ghost" id="offNo" data-t="of.no"></button>
+    </div>
+  </div>
+</section>
+
+<!-- NOTIFICATIONS — after the plans -->
+<section class="scr" data-id="notif">
+  <div class="scr-top">
+    <h2 class="tm-h" style="margin-top:24px" data-t="nt.h"></h2>
+  </div>
+  <div class="scr-body">
+    <div class="tm-ncards">
+      <div class="tm-nc a"><span class="ic"><svg viewBox="0 0 120 44" fill="currentColor" aria-label="Taimi"><path d="M31.658 14.4034C37.1522 14.4034 38.3473 19.0339 38.5009 19.4982C38.5133 19.5355 38.5175 19.5313 38.5175 19.5313V15.2242C38.5175 15.0045 38.6959 14.8221 38.92 14.8221H47.2609C47.4809 14.8221 47.6634 15.0003 47.6634 15.2242V35.2967L47.9913 41.1626C48.0037 41.3948 47.8211 41.5896 47.5887 41.5896H39.252C39.0362 41.5896 38.8578 41.4196 38.8495 41.2082L38.6088 36.9093C38.1316 37.8255 35.733 42 31.6041 42C29.1682 42 27.2718 40.8724 25.9729 38.6463C24.6076 36.3041 23.9229 32.7389 23.9229 28.2535C23.9229 23.7681 24.6284 20.2734 26.0185 17.8731C27.3547 15.5765 29.247 14.4075 31.658 14.4075V14.4034ZM60.7143 14.8179C60.9342 14.8179 61.1168 14.9962 61.1168 15.22V35.2967L61.4446 41.1626C61.4571 41.3948 61.2745 41.5937 61.0421 41.5937H52.7053C52.4896 41.5937 52.3111 41.4238 52.3028 41.2124L51.9708 35.3009V15.2242C51.9708 15.0045 52.1493 14.8221 52.3734 14.8221H60.7143V14.8179ZM26.8028 3.76598C27.0228 3.76598 27.2054 3.94424 27.2054 4.1681V10.6765C27.2054 10.9087 27.0062 11.0952 26.7738 11.0787L19.1757 10.5812V41.1833C19.1757 41.403 18.9972 41.5854 18.7731 41.5854H10.4322C10.2123 41.5854 10.0297 41.4072 10.0297 41.1833V10.5853L2.43157 11.0828C2.19504 11.0952 2 10.9128 2 10.6807V4.1681C2 3.94839 2.17844 3.76598 2.40252 3.76598H26.8028ZM116.08 14.8138C116.3 14.8138 116.482 14.992 116.482 15.2159C116.482 17.7737 116.491 28.3364 116.491 35.2926C116.491 38.0452 116.69 40.2382 116.789 41.1377C116.814 41.3782 116.623 41.5854 116.387 41.5854H108.071C107.855 41.5854 107.677 41.4155 107.668 41.2041L107.336 35.2926V15.2159C107.336 14.9962 107.515 14.8138 107.739 14.8138H116.08ZM81.4338 14.3743C83.8946 14.3743 85.7578 15.3195 86.9654 17.1684C87.7331 18.3457 88.0817 19.8464 88.2269 20.4558C88.2476 20.547 88.3763 20.5636 88.4178 20.4724C89.5465 17.9561 91.6297 14.3868 95.6964 14.3868C95.908 14.3702 96.0284 14.3743 96.0284 14.3743C98.4352 14.3743 100.327 15.5351 101.66 17.8275C103.05 20.2236 103.759 23.7059 103.759 28.1747V28.1664V35.2843L104.087 41.146C104.1 41.3782 103.917 41.573 103.685 41.573H95.3478C95.132 41.573 94.9536 41.403 94.9453 41.1916L94.6133 35.2843V28.1664C94.605 26.5746 94.5469 24.7754 94.19 23.4779C93.7875 22.0021 93.0074 21.2559 91.8911 21.2559C89.3847 21.2559 89.173 24.8708 89.173 28.2576V41.1792C89.173 41.3989 88.9946 41.5813 88.7705 41.5813H80.4254C80.2055 41.5813 80.0229 41.403 80.0229 41.1792V28.1747C80.0063 24.8293 79.8113 21.26 77.3048 21.26C74.7984 21.26 74.5868 24.8749 74.5868 28.2618V41.1833C74.5868 41.403 74.4083 41.5854 74.1843 41.5854H65.8433C65.6234 41.5854 65.4408 41.4072 65.4408 41.1833V15.2117C65.4408 14.992 65.6193 14.8096 65.8433 14.8096H74.1843C74.4083 14.8096 74.5909 14.9879 74.5951 15.2117V19.4277C74.5951 19.5396 74.7486 19.5687 74.7901 19.465C75.3503 18.0017 76.6865 16.5217 77.7115 15.6843C78.7655 14.8179 80.0271 14.3785 81.4504 14.3785L81.4338 14.3743ZM35.7994 21.289C34.098 21.289 33.0814 24.9785 33.0814 28.2908C33.0814 31.6031 34.0316 35.1143 35.7994 35.1143C37.4303 35.1143 38.3681 32.2207 38.5009 29.0702C38.5133 28.8131 38.5175 28.5437 38.5175 28.2908C38.5175 28.0379 38.5092 27.7809 38.5009 27.5239C38.3639 24.3401 37.3763 21.289 35.7994 21.289ZM56.4733 2C59.3822 2 61.6604 4.27588 61.6604 7.18188C61.6604 10.0879 59.3822 12.3638 56.4733 12.3638C53.5643 12.3638 51.2861 10.0879 51.2861 7.18188C51.2861 4.27588 53.5643 2 56.4733 2ZM111.839 2C114.748 2 117.026 4.27588 117.026 7.18188C117.026 10.0879 114.748 12.3638 111.839 12.3638C108.93 12.3638 106.652 10.0879 106.652 7.18188C106.652 4.27588 108.93 2 111.839 2Z"/></svg></span><div><b>Taimi</b><span data-t="nt.c1"></span></div><small data-t="nt.ago"></small></div>
+      <div class="tm-nc b"><span class="ic"><svg viewBox="0 0 120 44" fill="currentColor" aria-label="Taimi"><path d="M31.658 14.4034C37.1522 14.4034 38.3473 19.0339 38.5009 19.4982C38.5133 19.5355 38.5175 19.5313 38.5175 19.5313V15.2242C38.5175 15.0045 38.6959 14.8221 38.92 14.8221H47.2609C47.4809 14.8221 47.6634 15.0003 47.6634 15.2242V35.2967L47.9913 41.1626C48.0037 41.3948 47.8211 41.5896 47.5887 41.5896H39.252C39.0362 41.5896 38.8578 41.4196 38.8495 41.2082L38.6088 36.9093C38.1316 37.8255 35.733 42 31.6041 42C29.1682 42 27.2718 40.8724 25.9729 38.6463C24.6076 36.3041 23.9229 32.7389 23.9229 28.2535C23.9229 23.7681 24.6284 20.2734 26.0185 17.8731C27.3547 15.5765 29.247 14.4075 31.658 14.4075V14.4034ZM60.7143 14.8179C60.9342 14.8179 61.1168 14.9962 61.1168 15.22V35.2967L61.4446 41.1626C61.4571 41.3948 61.2745 41.5937 61.0421 41.5937H52.7053C52.4896 41.5937 52.3111 41.4238 52.3028 41.2124L51.9708 35.3009V15.2242C51.9708 15.0045 52.1493 14.8221 52.3734 14.8221H60.7143V14.8179ZM26.8028 3.76598C27.0228 3.76598 27.2054 3.94424 27.2054 4.1681V10.6765C27.2054 10.9087 27.0062 11.0952 26.7738 11.0787L19.1757 10.5812V41.1833C19.1757 41.403 18.9972 41.5854 18.7731 41.5854H10.4322C10.2123 41.5854 10.0297 41.4072 10.0297 41.1833V10.5853L2.43157 11.0828C2.19504 11.0952 2 10.9128 2 10.6807V4.1681C2 3.94839 2.17844 3.76598 2.40252 3.76598H26.8028ZM116.08 14.8138C116.3 14.8138 116.482 14.992 116.482 15.2159C116.482 17.7737 116.491 28.3364 116.491 35.2926C116.491 38.0452 116.69 40.2382 116.789 41.1377C116.814 41.3782 116.623 41.5854 116.387 41.5854H108.071C107.855 41.5854 107.677 41.4155 107.668 41.2041L107.336 35.2926V15.2159C107.336 14.9962 107.515 14.8138 107.739 14.8138H116.08ZM81.4338 14.3743C83.8946 14.3743 85.7578 15.3195 86.9654 17.1684C87.7331 18.3457 88.0817 19.8464 88.2269 20.4558C88.2476 20.547 88.3763 20.5636 88.4178 20.4724C89.5465 17.9561 91.6297 14.3868 95.6964 14.3868C95.908 14.3702 96.0284 14.3743 96.0284 14.3743C98.4352 14.3743 100.327 15.5351 101.66 17.8275C103.05 20.2236 103.759 23.7059 103.759 28.1747V28.1664V35.2843L104.087 41.146C104.1 41.3782 103.917 41.573 103.685 41.573H95.3478C95.132 41.573 94.9536 41.403 94.9453 41.1916L94.6133 35.2843V28.1664C94.605 26.5746 94.5469 24.7754 94.19 23.4779C93.7875 22.0021 93.0074 21.2559 91.8911 21.2559C89.3847 21.2559 89.173 24.8708 89.173 28.2576V41.1792C89.173 41.3989 88.9946 41.5813 88.7705 41.5813H80.4254C80.2055 41.5813 80.0229 41.403 80.0229 41.1792V28.1747C80.0063 24.8293 79.8113 21.26 77.3048 21.26C74.7984 21.26 74.5868 24.8749 74.5868 28.2618V41.1833C74.5868 41.403 74.4083 41.5854 74.1843 41.5854H65.8433C65.6234 41.5854 65.4408 41.4072 65.4408 41.1833V15.2117C65.4408 14.992 65.6193 14.8096 65.8433 14.8096H74.1843C74.4083 14.8096 74.5909 14.9879 74.5951 15.2117V19.4277C74.5951 19.5396 74.7486 19.5687 74.7901 19.465C75.3503 18.0017 76.6865 16.5217 77.7115 15.6843C78.7655 14.8179 80.0271 14.3785 81.4504 14.3785L81.4338 14.3743ZM35.7994 21.289C34.098 21.289 33.0814 24.9785 33.0814 28.2908C33.0814 31.6031 34.0316 35.1143 35.7994 35.1143C37.4303 35.1143 38.3681 32.2207 38.5009 29.0702C38.5133 28.8131 38.5175 28.5437 38.5175 28.2908C38.5175 28.0379 38.5092 27.7809 38.5009 27.5239C38.3639 24.3401 37.3763 21.289 35.7994 21.289ZM56.4733 2C59.3822 2 61.6604 4.27588 61.6604 7.18188C61.6604 10.0879 59.3822 12.3638 56.4733 12.3638C53.5643 12.3638 51.2861 10.0879 51.2861 7.18188C51.2861 4.27588 53.5643 2 56.4733 2ZM111.839 2C114.748 2 117.026 4.27588 117.026 7.18188C117.026 10.0879 114.748 12.3638 111.839 12.3638C108.93 12.3638 106.652 10.0879 106.652 7.18188C106.652 4.27588 108.93 2 111.839 2Z"/></svg></span><div><b>Taimi</b><span data-t="nt.c2"></span></div><small data-t="nt.now"></small></div>
+    </div>
+    <div class="tm-ngrp" data-t="nt.act"></div>
+    <div id="notifA"></div>
+    <div class="tm-ngrp" data-t="nt.more"></div>
+    <div id="notifB"></div>
+    <div style="height:8px"></div>
+  </div>
+  <div class="scr-foot"><button class="tm-btn" id="notifBtn" data-go="welcome" data-t="cont"></button></div>
+</section>
+
+        </div>
+      </div>
+    </div>
+    <div class="demo-cap hidden" id="demoCap"><div class="bar"><i id="demoProg"></i></div><p id="demoTxt"></p><button id="demoStop">Stop</button></div>
+    <div class="chips" id="chips"></div>
+    <p class="chiphint">Jump to any screen — answers already filled in.</p>
+    <div class="qr"><img src="img/qr.svg" alt="QR code for this prototype"><span><b>Open it on your phone</b>Scan to try the flow in your hand.</span></div>
+  </div>
+  <div class="panelcol"><div class="pn" id="panel"></div></div>
+</div>
+</div><!-- /view-proto -->
+
+<script>
+/* ================= copy, per language (phone screens only) ================= */
+var LANGS = ['en','es'];
+var T = {
+ 'wel.phone': ["Continue with phone","Continuar con teléfono"],
+ 'wel.other': ["Use another option","Usar otra opción"],
+ 'wel.legal': ["Taimi won't post to or display links to your social media. By registering, you agree to our <b>Terms of Service</b>, <b>Privacy Policy</b>, and <b>Cookie Policy</b>. <b>Contact support</b> with questions.",
+               "Taimi no publicará ni mostrará enlaces a tus redes sociales. Al registrarte, aceptas nuestros <b>Términos del servicio</b>, la <b>Política de privacidad</b> y la <b>Política de cookies</b>. <b>Contacta con soporte</b> si tienes dudas."],
+ 'cont':   ["Continue","Continuar"],
+ 'bd.h':   ["When is your birthday?","¿Cuándo es tu cumpleaños?"],
+ 'bd.sub': ["Others will only see your age on your profile.","Los demás solo verán tu edad en tu perfil."],
+ 'bd.age': ["Your age: {n}","Tu edad: {n}"],
+ 'g.h':    ["What’s your gender identity?","¿Cuál es tu identidad de género?"],
+ 'g.sub':  ["Change your gender identity anytime through Taimi Support.","Cambia tu identidad de género cuando quieras a través del soporte de Taimi."],
+ 'g.more': ["Add more about your gender ›","Añade más sobre tu género ›"],
+ 'sx.h':   ["Choose your sexuality","Elige tu sexualidad"],
+ 'sx.sub': ["Select the sexuality you identify with most.","Selecciona la sexualidad con la que más te identificas."],
+ 'dt.h':   ["Who would you like to date?","¿Con quién te gustaría salir?"],
+ 'dt.open':["Open to everyone","Abierto a todo el mundo"],
+ 'ag.h':   ["Age preferences","Preferencias de edad"],
+ 'ag.sub': ["Please select a preferred age range of at least 7 years","Selecciona un rango de edad de al menos 7 años"],
+ 'ag.range':["Age range","Rango de edad"],
+ 'ld.h':   ["Setting up your Taimi","Preparando tu Taimi"],
+ 'ld.look':["Looking for {who}","Buscando {who}"],
+ 'ld.ages':["Ages {a}–{b}","Edades {a}–{b}"],
+ 'ld.reach':["Across 40M+ users in 138 countries","Entre más de 40M usuarios en 138 países"],
+ 'po.kick':["Your profile is set up","Tu perfil está listo"],
+ 'po.h':   ["Here’s who you’re looking for","Esto es lo que buscas"],
+ 'po.you': ["You","Tú"],
+ 'po.look':["Looking for","Buscas"],
+ 'po.ages':["Ages","Edades"],
+ 'po.scale':["Taimi has <b>40M+ users</b> in <b>138 countries</b> — near you or anywhere in the world.","Taimi tiene <b>más de 40M usuarios</b> en <b>138 países</b>, cerca de ti o en cualquier parte del mundo."],
+ 'po.lockT':["See standout profiles","Ver perfiles destacados"],
+ 'po.lockD':["Profiles picked just for you · with Gold or Silver","Perfiles elegidos solo para ti · con Gold o Silver"],
+ 'pw.plans':["Plans","Planes"],
+ 'pw.h':   ["{name}, your Taimi is set for {who}, {a}–{b}","{name}, tu Taimi está listo para {who}, {a}–{b}"],
+ 'pw.sub': ["Upgrade so the people you Like always see your profile.","Mejora tu plan para que quien te guste siempre vea tu perfil."],
+ 'pw.best':["BEST VALUE","MEJOR VALOR"], 'pw.pop':["POPULAR","POPULAR"], 'pw.basic':["BASIC","BÁSICO"],
+ 'pw.p1':  ["215K ratings","215K valoraciones"],
+ 'pw.p2':  ["users worldwide","usuarios en el mundo"],
+ 'pw.p3':  ["in Social Networking","en Redes sociales"],
+ 'pw.cta': ["Choose the plan","Elegir el plan"],
+ 'pw.terms':["Subscription terms","Condiciones de suscripción"],
+ 'of.h':   ["{name}, we have a gift for you","{name}, tenemos un regalo para ti"],
+ 'of.sub': ["Not ready for Gold? Start with Taimi Bronze.","¿Aún no quieres Gold? Empieza con Taimi Bronze."],
+ 'of.fine':["Price as listed on the App Store.","Precio según el App Store."],
+ 'of.cta': ["Claim your gift","Reclama tu regalo"],
+ 'of.no':  ["No thanks","No, gracias"],
+ 'nt.h':   ["Pick your notifications","Elige tus notificaciones"],
+ 'nt.c1':  ["Heiga Liked your profile","A Heiga le gustó tu perfil"],
+ 'nt.c2':  ["You’ve got a new Match!","¡Tienes un nuevo Match!"],
+ 'nt.ago': ["5m ago","hace 5 min"], 'nt.now':["now","ahora"],
+ 'nt.act': ["Activity","Actividad"], 'nt.more':["More","Más"]
+};
+var GENDERS = [['man',"Man","Hombre"],['woman',"Woman","Mujer"],['tman',"Trans Man","Hombre trans"],['twoman',"Trans Woman","Mujer trans"],['nb',"Non-binary","No binario"]];
+var SEXES = [['gay',"Gay","Gay"],['bi',"Bisexual","Bisexual"],['pan',"Pansexual","Pansexual"],['queer',"Queer","Queer"],['ace',"Asexual","Asexual"],['demi',"Demisexual","Demisexual"],['straight',"Straight","Hetero"],['lesbian',"Lesbian","Lesbiana"]];
+var DATES = [['men',"Men","Hombres","men","hombres"],['women',"Women","Mujeres","women","mujeres"],['tmen',"Trans Men","Hombres trans","trans men","hombres trans"],['twomen',"Trans Women","Mujeres trans","trans women","mujeres trans"],['nb',"Non-binary","No binario","non-binary people","personas no binarias"]];
+var EVERYONE = ["everyone","todo el mundo"];
+var MONTHS = {en:['January','February','March','April','May','June','July','August','September','October','November','December'],
+              es:['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']};
+var FEATS = [ /* their Plans screen, verbatim — g/s/b: what each tier includes */
+ {sec:["Upgrade your Likes","Mejora tus Likes"], rows:[
+   {t:["Send unblurred Likes","Envía Likes sin difuminar"], d:["They'll always see your profile","Siempre verán tu perfil"], g:1,s:1,b:1},
+   {t:["See who liked you","Mira a quién le gustas"], d:["We'll unblur the profiles that like you","Desdifuminamos los perfiles a los que les gustas"], g:1,s:1,b:0}]},
+ {sec:["Premium discovery","Descubrimiento premium"], rows:[
+   {t:["See standout profiles","Ver perfiles destacados"], d:["Profiles picked just for you","Perfiles elegidos solo para ti"], g:1,s:1,b:0},
+   {t:["View your admirers","Ver a tus admiradores"], d:["See your admirers from the last 7 days","Ve a tus admiradores de los últimos 7 días"], g:1,s:0,b:0}]},
+ {sec:["Enhance your experience","Mejora tu experiencia"], rows:[
+   {t:["Manage activity with filters","Gestiona tu actividad con filtros"], d:["Sort by your favorite preferences","Ordena según tus preferencias"], g:1,s:0,b:0},
+   {t:{g:["Prime Likes 3x/week","Prime Likes 3x/semana"],s:["Prime Likes 2x/week","Prime Likes 2x/semana"],b:["Prime Like 1x/week","Prime Like 1x/semana"]}, d:["We curate the profiles – You curate the likes","Nosotros elegimos los perfiles, tú eliges los likes"], g:1,s:1,b:1},
+   {t:{g:["Instant Chats 3x/week","Chats instantáneos 3x/semana"],s:["Instant Chats 2x/week","Chats instantáneos 2x/semana"],b:["Instant Chat 1x/week","Chat instantáneo 1x/semana"]}, d:["No need to wait, send messages right away","Sin esperas, envía mensajes al momento"], g:1,s:1,b:1},
+   {t:{g:["Review skipped profiles 3x/week","Revisa perfiles saltados 3x/semana"],s:["Review skipped profiles 1x/week","Revisa perfiles saltados 1x/semana"],b:["Review skipped profiles 3x/week","Revisa perfiles saltados 3x/semana"]}, d:["Skipped someone? See their profile again","¿Saltaste a alguien? Vuelve a ver su perfil"], g:1,s:1,b:1}]}
+];
+var NOTIFS = {a:[['match',"You Matched","Hiciste Match","When there's a mutual Like","Cuando hay un Like mutuo"],
+                 ['like',"New Like","Nuevo Like","Someone Liked your profile","Alguien dio Like a tu perfil"],
+                 ['msg',"Message alert","Aviso de mensaje","Know when you get a message","Entérate cuando recibas un mensaje"]],
+              b:[['perks',"Marketing perks","Ventajas","Exclusive offers and Taimi news","Ofertas exclusivas y novedades de Taimi"],
+                 ['events',"Events near you","Eventos cerca de ti","Meetups, parties, and more","Quedadas, fiestas y más"]]};
+var NICON = {match:'<path d="M8.5 13.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z"/><path d="M15.5 19.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9Z"/>',
+  like:'<path d="M7 11v9H4v-9h3Zm0 0 4-7a2 2 0 0 1 2 2v4h5a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 16.8 20H7"/>',
+  msg:'<path d="M20 12a8 8 0 0 1-11.5 7.2L4 20l1-4A8 8 0 1 1 20 12Z"/>',
+  perks:'<path d="M3 10v4h3l6 4V6L6 10H3Z"/><path d="M16 9a4 4 0 0 1 0 6"/>',
+  events:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>'};
+
+function defaults(){ return { lang:S0.lang, theme:S0.theme, name:'Alex', d:16, m:7, y:1993, gender:'woman', sex:['lesbian','queer'],
+  open:false, date:['women','nb'], a:30, b:46, tier:'gold', notif:{match:true} }; }
+var S0 = {lang:'en', theme:'dark'};
+var S = defaults();
+function L(){ return LANGS.indexOf(S.lang); }
+function t(k,v){ var s=(T[k]||[k])[L()]; if(v) Object.keys(v).forEach(function(x){ s=s.split('{'+x+'}').join(v[x]); }); return s; }
+function lab(row){ return row[1+L()]; }
+function joinL(a){ var and=S.lang==='es'?' y ':' and '; return a.length<2 ? (a[0]||'') : a.slice(0,-1).join(', ')+and+a[a.length-1]; }
+function ageNow(){ var now=new Date(2026,9,19), a=now.getFullYear()-S.y; if(now.getMonth()<S.m || (now.getMonth()===S.m && now.getDate()<S.d)) a--; return a; }
+function whoTxt(){ if(S.open || !S.date.length) return EVERYONE[L()]; return joinL(DATES.filter(function(r){ return S.date.indexOf(r[0])>=0; }).map(function(r){ return r[3+L()]; })); }
+function find(list,k){ for(var i=0;i<list.length;i++) if(list[i][0]===k) return list[i]; return null; }
+
+/* ================= builders ================= */
+var ckSvg='<span class="tm-chk"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>';
+function buildGender(){ var g=document.getElementById('genderList'); g.innerHTML='';
+  GENDERS.forEach(function(r){ var b=document.createElement('button'); b.className='tm-row'; b.dataset.v=r[0];
+    b.innerHTML='<span>'+lab(r)+'<small class="more">'+t('g.more')+'</small></span><span class="tm-rad"><i></i></span>';
+    b.onclick=function(){ S.gender=r[0]; syncScreen(); }; g.appendChild(b); }); }
+function buildMulti(id,list,key){ var g=document.getElementById(id); g.innerHTML='';
+  list.forEach(function(r){ var b=document.createElement('button'); b.className='tm-row'; b.dataset.v=r[0];
+    b.innerHTML='<span>'+lab(r)+'</span>'+ckSvg;
+    b.onclick=function(){ var a=S[key], i=a.indexOf(r[0]); if(i>=0) a.splice(i,1); else a.push(r[0]); if(key==='date') S.open=false; syncScreen(); }; g.appendChild(b); }); }
+function buildNotif(){ ['a','b'].forEach(function(k){ var g=document.getElementById('notif'+k.toUpperCase()); g.innerHTML='';
+  NOTIFS[k].forEach(function(r){ var d=document.createElement('div'); d.className='tm-nrow';
+    d.innerHTML='<span class="ic"><svg viewBox="0 0 24 24">'+NICON[r[0]]+'</svg></span><div>'+r[1+L()]+'<span>'+r[3+L()]+'</span></div><button class="tm-tg" data-n="'+r[0]+'" aria-label="'+r[1]+'"><i></i></button>';
+    d.querySelector('button').onclick=function(){ S.notif[r[0]]=!S.notif[r[0]]; syncScreen(); }; g.appendChild(d); }); }); }
+var CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="{c}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+var LOCK='<svg viewBox="0 0 24 24" fill="#86878D"><path d="M7 10V7.5a5 5 0 0 1 10 0V10h.5A1.5 1.5 0 0 1 19 11.5v8a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19.5v-8A1.5 1.5 0 0 1 6.5 10H7Zm2 0h6V7.5a3 3 0 0 0-6 0V10Z"/></svg>';
+var TICK = {gold:'#E7A23B', silver:'#D9DAE0', bronze:'#E58852'};
+function featHTML(tier,only){ var c=TICK[tier]; if(S.theme==='light' && tier==='silver') c='#6B6E78';
+  return FEATS.map(function(s){ var rows=s.rows.filter(function(r){ return !only || r[tier[0]]; }); if(!rows.length) return '';
+    return '<div class="tm-sec"><h6>'+s.sec[L()]+'</h6>'+rows.map(function(r){
+    var inc=r[tier[0]], title=r.t.g ? r.t[tier[0]][L()] : r.t[L()];
+    return '<div class="tm-f'+(inc?'':' lock')+'">'+(inc?CHECK.replace('{c}',c):LOCK)+'<div><b>'+title+'</b><span>'+r.d[L()]+'</span></div></div>'; }).join('')+'</div>'; }).join(''); }
+
+/* birthday wheels — real scroll-snap controls */
+var IH=36, wheels={};
+function buildWheel(id,items,key,base){ var w=document.getElementById(id), h='<div class="sp"></div>';
+  items.forEach(function(x){ h+='<div class="it">'+x+'</div>'; }); w.innerHTML=h+'<div class="sp"></div>';
+  wheels[key]={el:w,base:base,n:items.length};
+  var tm=null; w.onscroll=function(){ paintWheel(key); clearTimeout(tm); tm=setTimeout(function(){ var i=paintWheel(key); S[key]=base+i; syncScreen(true); },90); }; }
+function paintWheel(key){ var w=wheels[key], idx=Math.max(0,Math.min(w.n-1,Math.round(w.el.scrollTop/IH)));
+  w.el.querySelectorAll('.it').forEach(function(it,i){ var d=Math.abs(i-idx); it.style.opacity=d===0?1:(d===1?.5:.22); }); return idx; }
+function setWheels(){ ['d','m','y'].forEach(function(k){ var w=wheels[k]; if(!w) return; w.el.scrollTop=(S[k]-w.base)*IH; paintWheel(k); }); }
+function buildWheels(){ var days=[],yrs=[]; for(var i=1;i<=31;i++) days.push(i); for(var y=1950;y<=2008;y++) yrs.push(y);
+  buildWheel('wD',days,'d',1); buildWheel('wM',MONTHS[S.lang],'m',0); buildWheel('wY',yrs,'y',1950); }
+
+/* age range — two working thumbs */
+var RMIN=18, RMAX=80, rEl=document.getElementById('range');
+function paintRange(){ var w=rEl.clientWidth||300, x=function(v){ return (v-RMIN)/(RMAX-RMIN)*w; };
+  document.getElementById('rA').style.left=x(S.a)+'px'; document.getElementById('rB').style.left=x(S.b)+'px';
+  var f=document.getElementById('rFill'); f.style.left=x(S.a)+'px'; f.style.width=(x(S.b)-x(S.a))+'px';
+  document.getElementById('rangeVal').textContent=S.a+' - '+S.b; }
+(function(){ var drag=null;
+  function val(e){ var r=rEl.getBoundingClientRect(); return Math.round(RMIN+Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*(RMAX-RMIN)); }
+  rEl.addEventListener('pointerdown',function(e){ var v=val(e); drag=Math.abs(v-S.a)<=Math.abs(v-S.b)?'a':'b'; rEl.setPointerCapture(e.pointerId); move(e); });
+  rEl.addEventListener('pointermove',function(e){ if(drag) move(e); });
+  rEl.addEventListener('pointerup',function(){ drag=null; });
+  function move(e){ var v=val(e); if(drag==='a') S.a=Math.min(v,S.b-7); else S.b=Math.max(v,S.a+7); S.a=Math.max(RMIN,S.a); S.b=Math.min(RMAX,S.b); syncScreen(); }
+})();
+
+function applyStatic(){
+  document.querySelectorAll('[data-t]').forEach(function(n){ n.textContent=t(n.dataset.t); });
+  document.querySelectorAll('[data-th]').forEach(function(n){ n.innerHTML=t(n.dataset.th); });
+  document.documentElement.lang=S.lang;
+  buildGender(); buildMulti('sexList',SEXES,'sex'); buildMulti('dateList',DATES,'date'); buildNotif(); buildWheels(); setWheels();
+}
+
+function syncScreen(fromWheel){
+  document.getElementById('ageLine').textContent=t('bd.age',{n:ageNow()});
+  document.querySelectorAll('#genderList .tm-row').forEach(function(b){ var on=b.dataset.v===S.gender; b.classList.toggle('on',on); b.querySelector('.more').style.display=on?'block':'none'; });
+  document.querySelectorAll('#sexList .tm-row').forEach(function(b){ b.classList.toggle('on',S.sex.indexOf(b.dataset.v)>=0); });
+  document.querySelectorAll('#dateList .tm-row').forEach(function(b){ b.classList.toggle('on',!S.open && S.date.indexOf(b.dataset.v)>=0); });
+  document.getElementById('openTg').classList.toggle('on',S.open);
+  document.getElementById('sexBtn').disabled=!S.sex.length;
+  document.getElementById('dateBtn').disabled=!S.open && !S.date.length;
+  paintRange();
+  // loader lines — their answers, read back
+  var g=lab(find(GENDERS,S.gender)), sx=SEXES.filter(function(r){ return S.sex.indexOf(r[0])>=0; }).map(lab);
+  document.getElementById('ls1').textContent=g+', '+ageNow()+(sx.length?' · '+sx.join(' · '):'');
+  document.getElementById('ls2').textContent=t('ld.look',{who:whoTxt()});
+  document.getElementById('ls3').textContent=t('ld.ages',{a:S.a,b:S.b});
+  document.getElementById('ls4').textContent=t('ld.reach');
+  // payoff
+  document.getElementById('poYou').textContent=g+', '+ageNow();
+  document.getElementById('poSex').innerHTML=sx.map(function(s){ return '<span class="tm-chip on">'+s+'</span>'; }).join('');
+  var pw=document.getElementById('poWho'); pw.innerHTML='';
+  DATES.forEach(function(r){ var b=document.createElement('button'); var on=S.open || S.date.indexOf(r[0])>=0;
+    b.className='tm-chip'+(on?' on':''); b.dataset.v=r[0]; b.textContent=lab(r);
+    b.onclick=function(){ if(S.open){ S.open=false; S.date=DATES.map(function(x){return x[0];}); } var i=S.date.indexOf(r[0]); if(i>=0){ if(S.date.length>1) S.date.splice(i,1); } else S.date.push(r[0]); syncScreen(); };
+    pw.appendChild(b); });
+  document.getElementById('poAge').textContent=S.a+'–'+S.b;
+  // paywall
+  document.getElementById('payH').textContent=t('pw.h',{name:S.name,who:whoTxt(),a:S.a,b:S.b});
+  document.querySelectorAll('#tiers .tm-tier').forEach(function(b){ b.classList.toggle('cur',b.dataset.v===S.tier); });
+  var ti=['gold','silver','bronze'].indexOf(S.tier);
+  document.querySelectorAll('#tierDots i').forEach(function(d,i){ d.classList.toggle('on',i===ti); });
+  document.getElementById('featList').innerHTML=featHTML(S.tier);
+  document.getElementById('payCta').className='tm-paybtn '+S.tier;
+  // offer
+  document.getElementById('offH').textContent=t('of.h',{name:S.name});
+  document.getElementById('offFeat').innerHTML=featHTML('bronze',true);
+  // notifications
+  document.querySelectorAll('[data-n]').forEach(function(b){ b.classList.toggle('on',!!S.notif[b.dataset.n]); });
+  document.getElementById('notifBtn').disabled=!Object.keys(S.notif).some(function(k){ return S.notif[k]; });
+  if(!fromWheel) setWheels();
+}
+
+/* ================= router ================= */
+var ORDER=['welcome','birthday','gender','sexuality','date','age','loader','payoff','paywall','offer','notif'];
+var LABEL={welcome:'Welcome',birthday:'Birthday',gender:'Gender',sexuality:'Sexuality',date:'Who to date',age:'Age range',loader:'Loader',payoff:'Payoff',paywall:'Plans',offer:'Offer on close',notif:'Notifications'};
+var scr={}, hist=[], cur='welcome', loadTimers=[];
+document.querySelectorAll('.scr').forEach(function(s){ scr[s.dataset.id]=s; });
+
+function chrome(){ var ink=S.theme==='light' && !scr[cur].dataset.fixed;
+  document.getElementById('sbar').classList.toggle('ink',ink); document.getElementById('homebar').classList.toggle('ink',ink); }
+function enter(id){ chrome(); paintChips(); paintPanel(); clearLoad();
+  if(id==='loader') runLoader(); if(id==='birthday') requestAnimationFrame(setWheels); if(id==='age') requestAnimationFrame(paintRange);
+  if(id==='paywall') requestAnimationFrame(function(){ scrollTier(false); }); }
+function go(id,opts){
+  opts=opts||{}; if(id===cur) return;
+  var from=scr[cur], to=scr[id];
+  if(!opts.back) hist.push(cur);
+  if(from){ from.classList.remove('is-active');
+    if(!to.classList.contains('sheet') && !from.classList.contains('sheet')) from.classList.add('is-past'); }
+  if(to.classList.contains('sheet')) from.classList.add('is-active');
+  Object.keys(scr).forEach(function(k){ if(k!==id&&k!==cur) scr[k].classList.remove('is-active'); });
+  if(from && to.classList.contains('sheet')) from.classList.add('is-active');
+  to.classList.remove('is-past'); to.classList.add('is-active');
+  if(from && from.classList.contains('sheet')) Object.keys(scr).forEach(function(k){ if(k!==id) scr[k].classList.remove('is-active'); });
+  cur=id; enter(id);
+}
+function back(){
+  if(!hist.length) return;
+  var prev=hist.pop();
+  scr[cur].classList.remove('is-active');
+  scr[prev].classList.remove('is-past'); scr[prev].classList.add('is-active');
+  cur=prev; enter(prev);
+}
+function jump(id){
+  var i=ORDER.indexOf(id);
+  Object.keys(scr).forEach(function(k){ scr[k].classList.add('nofx'); scr[k].classList.remove('is-active','is-past'); });
+  hist=ORDER.slice(0,i<0?0:i);
+  if(id==='offer') scr.paywall.classList.add('is-active');
+  scr[id].classList.add('is-active'); cur=id;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    Object.keys(scr).forEach(function(k){ scr[k].classList.remove('nofx'); }); }); });
+  syncScreen(); enter(id);
+}
+function paintChips(){
+  var c=document.getElementById('chips');
+  if(!c.children.length) ORDER.forEach(function(id){
+    var b=document.createElement('button'); b.className='chip'+(id==='offer'?' offer':''); b.textContent=LABEL[id];
+    b.dataset.id=id; b.onclick=function(){ stopDemo(); jump(id); }; c.appendChild(b); });
+  c.querySelectorAll('.chip').forEach(function(b){ b.classList.toggle('on', b.dataset.id===cur); });
+}
+function clearLoad(){ loadTimers.forEach(clearTimeout); loadTimers=[]; }
+function runLoader(){
+  var k=demo.on?0.48:1, arc=document.getElementById('ringArc');
+  var steps=[].slice.call(document.querySelectorAll('#loadSteps .tm-ls'));
+  steps.forEach(function(s){ s.classList.remove('on'); });
+  arc.style.transition='none'; arc.style.strokeDashoffset=339.3; arc.getBoundingClientRect();
+  arc.style.transition='stroke-dashoffset '+(4.6*k)+'s linear'; arc.style.strokeDashoffset=0;
+  steps.forEach(function(s,i){ loadTimers.push(setTimeout(function(){ s.classList.add('on'); },(600+i*1000)*k)); });
+  loadTimers.push(setTimeout(function(){ if(cur==='loader') go('payoff'); },5400*k));
+}
+
+/* tier carousel — swipe or tap, like theirs */
+var tierEl=document.getElementById('tiers'), tierTm=null;
+function scrollTier(smooth){ var b=tierEl.querySelector('[data-v='+S.tier+']'); if(!b) return;
+  tierEl.scrollTo({left:b.offsetLeft-(tierEl.clientWidth-b.offsetWidth)/2,behavior:smooth?'smooth':'auto'}); }
+tierEl.addEventListener('scroll',function(){ clearTimeout(tierTm); tierTm=setTimeout(function(){
+  var mid=tierEl.scrollLeft+tierEl.clientWidth/2, best=null, bd=1e9;
+  tierEl.querySelectorAll('.tm-tier').forEach(function(b){ var d=Math.abs(b.offsetLeft+b.offsetWidth/2-mid); if(d<bd){ bd=d; best=b.dataset.v; } });
+  if(best && best!==S.tier){ S.tier=best; syncScreen(true); } },110); });
+tierEl.querySelectorAll('.tm-tier').forEach(function(b){ b.addEventListener('click',function(){ S.tier=b.dataset.v; syncScreen(true); scrollTier(true); }); });
+
+/* ================= wiring ================= */
+document.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ if(!b.disabled) go(b.dataset.go); }); });
+document.getElementById('openTg').addEventListener('click',function(){ S.open=!S.open; syncScreen(); });
+document.getElementById('payClose').addEventListener('click',function(){ go('offer'); });
+document.getElementById('payCta').addEventListener('click',function(){ go('notif'); });
+document.getElementById('offClose').addEventListener('click',function(){ go('notif'); });
+document.getElementById('offNo').addEventListener('click',function(){ go('notif'); });
+document.getElementById('offerCta').addEventListener('click',function(){ go('notif'); });
+document.getElementById('ageMinus').addEventListener('click',function(){ if(S.b-S.a>7){ S.a=Math.min(S.a+1,S.b-7); S.b=Math.max(S.b-1,S.a+7); } syncScreen(); });
+document.getElementById('agePlus').addEventListener('click',function(){ S.a=Math.max(RMIN,S.a-1); S.b=Math.min(RMAX,S.b+1); syncScreen(); });
+
+function setSeg(id,attr,val){ document.querySelectorAll('#'+id+' button').forEach(function(b){ b.classList.toggle('on', b.dataset[attr]===val); }); }
+function setLang(l){ S.lang=l; S0.lang=l; setSeg('segLang','lang',l); applyStatic(); syncScreen(); paintPanel(); }
+function setTheme(th){ S.theme=th; S0.theme=th; document.getElementById('phoneIn').classList.toggle('light',th==='light'); setSeg('segTheme','theme',th); syncScreen(true); chrome(); }
+document.querySelectorAll('#segLang button').forEach(function(b){ b.addEventListener('click',function(){ stopDemo(); setLang(b.dataset.lang); }); });
+document.querySelectorAll('#segTheme button').forEach(function(b){ b.addEventListener('click',function(){ setTheme(b.dataset.theme); }); });
+
+/* ================= the 30-second walkthrough ================= */
+var demo={tok:0,on:false,t0:0,iv:null}, finger=document.getElementById('finger'), phoneIn=document.getElementById('phoneIn');
+function W(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+function cap(txt){ document.getElementById('demoTxt').textContent=txt; }
+async function tap(sel,tok){
+  if(demo.tok!==tok) throw 0;
+  var el=document.querySelector(sel); if(!el) return;
+  var r=el.getBoundingClientRect(), p=phoneIn.getBoundingClientRect(), z=p.width/phoneIn.offsetWidth||1;
+  finger.style.left=((r.left-p.left+r.width/2)/z)+'px'; finger.style.top=((r.top-p.top+r.height/2)/z)+'px';
+  finger.classList.add('show'); await W(380); if(demo.tok!==tok) throw 0;
+  finger.classList.add('press'); await W(120); finger.classList.remove('press'); el.click(); await W(160);
+  if(demo.tok!==tok) throw 0;
+}
+async function pause(ms,tok){ await W(ms); if(demo.tok!==tok) throw 0; }
+function startDemo(){
+  stopDemo(); var tok=++demo.tok; demo.on=true; demo.t0=Date.now();
+  var keep={lang:S.lang,theme:S.theme}; S=defaults(); S.lang=keep.lang; S.theme=keep.theme;
+  applyStatic(); jump('welcome');
+  document.getElementById('demoCap').classList.remove('hidden');
+  demo.iv=setInterval(function(){ document.getElementById('demoProg').style.width=Math.min(100,(Date.now()-demo.t0)/290)+'%'; },200);
+  (async function(){
+    try{
+      cap('Sign-up stays first, on your own splash.'); await pause(1100,tok);
+      await tap('[data-id=welcome] .tm-wbtn.w',tok);
+      cap('Your birthday wheel. Their age updates as it turns.'); await pause(450,tok);
+      var wy=wheels.y.el; wy.scrollTo({top:(1996-1950)*IH,behavior:'smooth'}); await pause(850,tok);
+      S.y=1996; setWheels(); syncScreen(true);
+      await tap('[data-id=birthday] .tm-btn',tok);
+      cap('Every question you ask today stays.'); await pause(400,tok);
+      await tap('#genderList [data-v=nb]',tok); await pause(250,tok); await tap('#genderBtn',tok);
+      await pause(250,tok); await tap('#sexList [data-v=pan]',tok); await pause(250,tok); await tap('#sexBtn',tok);
+      cap('Who they want to date, and an age range.'); await pause(250,tok);
+      await tap('#dateList [data-v=tmen]',tok); await pause(250,tok); await tap('#dateBtn',tok);
+      await pause(350,tok); await tap('#ageBtn',tok);
+      cap('Their answers, read back while it sets up.'); await pause(2700,tok);
+      cap('In place of “No users found”: who Taimi will look for.'); await pause(1100,tok);
+      await tap('#agePlus',tok); await pause(150,tok); await tap('#agePlus',tok); await pause(500,tok);
+      await tap('[data-id=payoff] .tm-btn',tok);
+      cap('Plans, straight after setup, with their answers and your 4.4 stars.'); await pause(1600,tok);
+      await tap('#tiers [data-v=silver]',tok); await pause(800,tok); await tap('#tiers [data-v=gold]',tok); await pause(500,tok);
+      cap('They close it. One second chance: Taimi Bronze at $0.99.'); await tap('#payClose',tok); await pause(2400,tok);
+      cap('That is the flow. Notifications come next, after the plans.');
+      finger.classList.remove('show'); await pause(2000,tok); stopDemo();
+    }catch(e){}
+  })();
+}
+function stopDemo(){ if(!demo.on) return; demo.tok++; demo.on=false; clearInterval(demo.iv); finger.classList.remove('show','press');
+  document.getElementById('demoCap').classList.add('hidden'); window.__demoEnd=Date.now(); }
+document.getElementById('demoBtn').addEventListener('click',startDemo);
+document.getElementById('demoStop').addEventListener('click',stopDemo);
+phoneIn.addEventListener('pointerdown',function(e){ if(e.isTrusted && demo.on) stopDemo(); });
+</script>
+<script>
+/* ---- the short panel: hypothesis + potential outcome, nothing else ---- */
+var PANEL = {
+welcome:{ctx:true,t:'Your splash and sign-up',
+ kept:'Untouched — your illustration, the wordmark and “Find Out What You’re Into”, Continue with phone, Use another option and the legal line. Sign-up stays first, where it is today.'},
+birthday:{ctx:true,t:'When is your birthday?',
+ kept:'Your three-column wheel and “Your age”, rebuilt as a working control — turn the year and the age changes. It now also appears on the loader and the payoff.'},
+gender:{ctx:true,t:'What’s your gender identity?',
+ kept:'Your five options in your order, your violet radio and the “Add more about your gender” line under the chosen one.'},
+sexuality:{ctx:true,t:'Choose your sexuality',
+ kept:'All eight options, multi-select with your square checkboxes. The answer is read back on the loader and the payoff.'},
+date:{ctx:true,t:'Who would you like to date?',
+ kept:'Your “Open to everyone” toggle and the five options. This is the answer the Plans headline is built from.'},
+age:{ctx:true,t:'Age preferences',
+ kept:'Your photo collage, the 7-year minimum and a two-thumb slider that really drags. Romance type, photos and the private album keep their places before this step; we did not redraw them.'},
+loader:{n:2,t:'Read their answers back, not an empty feed',
+ hyp:'Try a short setup moment that names what they just told you, <b>because today ten answers end on the People tab saying “No users found”</b>. Every line here is their own answer; the reach line is from your homepage.',
+ kept:'Your black, your violet-to-pink progress gradient, your wordmark and a five-star review from your App Store screenshots, quoted as written.',
+ out:'CR +10–15%'},
+payoff:{n:2,t:'Read their answers back, not an empty feed',
+ hyp:'Try ending setup on who Taimi will look for, <b>because that is the promise the questions made</b>. Tap a chip or widen the age range and the Plans headline changes with it.',
+ kept:'Your “Finish setting up your profile” avatar ring, your card greys and your Plans copy for standout profiles. Portraits are from taimi.com.',
+ out:'CR +10–15%'},
+paywall:{n:1,t:'Show your plans when the profile is done',
+ hyp:'Try opening Plans right after setup, with the headline built from their answers, <b>because today Plans only lives behind Profile and new members land on an empty feed instead</b>.',
+ n2:5, hyp2:'Try your 4.4 from 215K ratings, 40M+ users and your #41 Social Networking rank above the features, <b>because Plans today is only feature lists and no proof at the moment of paying</b>. The review is quoted from your App Store screenshots.',
+ out2:'CR +10–15%',
+ kept:'Your Plans screen as it ships — Gold, Silver and Bronze cards with Best Value, Popular and Basic, the swipeable carousel and dots, every feature row with your ticks and locks, and the gold, silver and bronze “Choose the plan” buttons.',
+ out:'CR +15–20%'},
+offer:{n:3,t:'Offer Taimi Bronze when they close Plans',
+ hyp:'Try your gift sheet on close with Taimi Bronze at $0.99, <b>because closing Plans today just closes it, and Bronze is already your own way in</b> — your location sheet sells it. The price is the one listed on your App Store page.',
+ kept:'Your gift sheet — the gift icon, “we have a gift for you” with their name, “Claim your gift” — plus your Bronze card and Bronze feature rows.',
+ out:'ARPU +10–15%'},
+notif:{n:4,t:'Ask for notifications after the plans',
+ hyp:'Try this screen after Plans, with the system prompt shown in the app, <b>because today it sits at step 10 and sends people out to iOS Settings in the middle of setup</b>.',
+ kept:'Your “Pick your notifications” screen — the two stacked notification cards, Activity and More groups, the five toggles and their copy.',
+ out:'CR +10–15%'}
+};
+
+function outBlock(lab,val){ return '<div class="pn-out"><div class="lab">'+lab+'</div><div class="v">'+val+'</div></div>'; }
+function paintPanel(){
+  var d=PANEL[cur]; if(!d) return;
+  var h='';
+  if(d.ctx){
+    h += '<div class="pn-n ctx">Context · no change proposed</div><h3 class="pn-t">'+d.t+'</h3>'
+       + '<div class="pn-kept">'+d.kept+'</div>';
+  } else {
+    h += '<div class="pn-n">Idea '+d.n+' of 5</div><h3 class="pn-t">'+d.t+'</h3>'
+       + '<p class="pn-hyp">'+d.hyp+'</p>'
+       + outBlock('Potential outcome · based on Adapty data', d.out);
+    if(d.hyp2){
+      h += '<div class="pn-sep"></div>'
+         + '<div class="pn-n">Idea '+d.n2+' of 5</div><h3 class="pn-t">Put your 4.4 stars on the plans screen</h3>'
+         + '<p class="pn-hyp" style="margin-top:12px">'+d.hyp2+'</p>'
+         + outBlock('Potential outcome · based on Adapty data', d.out2);
+    }
+    h += '<div class="pn-kept"><b>Your design, unchanged.</b> '+d.kept+'</div>';
+  }
+  if(S.lang!=='en') h += '<div class="pn-kept"><b>Language.</b> Screens are shown in Spanish, one of the ten languages Taimi ships, to show one flow serving every market. Translations are ours; the store price stays as published in US dollars and the review stays verbatim in English.</div>';
+  if(S.theme==='light') h += '<div class="pn-kept"><b>Light mode.</b> Taimi ships dark only, so this light version is our approximation of your palette.</div>';
+  h += '<div class="pn-foot">Ranges are Adapty’s expected effect from tests across 30,000+ subscription apps — not measured lift for Taimi. '
+     + 'Prices, ratings, quotes and feature lines come from your own published material.</div>';
+  document.getElementById('panel').innerHTML = h;
+}
+
+/* ---- views, jumps from the overview ---- */
+function showView(v){
+  if(v!=='proto') stopDemo();
+  document.querySelectorAll('.view').forEach(function(x){ x.classList.remove('on'); });
+  document.getElementById('view-'+v).classList.add('on');
+  document.querySelectorAll('.nav-links button[data-view]').forEach(function(b){ b.classList.toggle('on', b.dataset.view===v); });
+  window.scrollTo(0,0);
+  if(v==='proto') requestAnimationFrame(function(){ setWheels(); paintRange(); if(cur==='paywall') scrollTier(false); });
+}
+document.querySelectorAll('[data-view]').forEach(function(b){ b.addEventListener('click',function(){ showView(b.dataset.view); }); });
+document.querySelectorAll('.idea[data-jump]').forEach(function(b){
+  b.addEventListener('click',function(){ showView('proto'); jump(b.dataset.jump); });
+});
+document.querySelectorAll('[data-demo]').forEach(function(b){ b.addEventListener('click',function(){ showView('proto'); startDemo(); }); });
+
+applyStatic();
+scr.welcome.classList.add('is-active');
+syncScreen(); chrome(); paintChips(); paintPanel();
+window.addEventListener('resize',paintRange);
+if(/[?&]open=proto/.test(location.search)) showView('proto');
+</script>
+</body>
+</html>
